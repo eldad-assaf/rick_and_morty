@@ -20,9 +20,10 @@ class CharacterBloc extends Cubit<CharacterState> {
 
   Future<void> getOne() async {
     try {
-      final characters = _repository.searchCharacterByName('s');
+
+      final characters = await _repository.searchCharacterByName('eldad');
     } catch (e) {
-      print('error777');
+      print(e.toString());
     }
   }
 }

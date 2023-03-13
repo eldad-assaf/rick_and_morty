@@ -22,17 +22,28 @@ class CharacterRepository {
     }
   }
 
-  void searchCharacterByName(String name) async {
+  Future<List<Character>?> searchCharacterByName(String name) async {
     final dio = Dio();
     try {
       final response = await dio.get(
-          'https://rickandmortyapi.com/api/character',
-          queryParameters: {'name': 'Rick Sanchez'});
-      final characters = response.data['results'];
-      print('rick? : $characters');
-      // Do something with the list of characters that match the name
-    } catch (e) {
-      print(e.toString());
+        'https://rickandmortyapi.com/api/character',
+        queryParameters: {'name': name},
+      );
+
+      if (response.statusCode == 404 || response.data['error'] != null) {
+        return null;
+      }
+
+      final data = response.data['results'] as List;
+      final characters = data.map((e) => Character.fromJson(e)).toList();
+      return characters;
+    } on DioError catch (e) {
+      print(e.response!.statusMessage);
+      if (e.response!.statusMessage == 'Not Found') {
+        //there is no character under this name!
+        return [];
+      }
+      throw Exception(e.message);
     }
   }
 }
