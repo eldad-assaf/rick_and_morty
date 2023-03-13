@@ -17,4 +17,12 @@ class CharacterBloc extends Cubit<CharacterState> {
       emit(const CharacterError('error message'));
     }
   }
+
+  Future<void> getOne() async {
+    try {
+      final characters = _repository.searchCharacterByName('s');
+    } catch (e) {
+      print('error777');
+    }
+  }
 }

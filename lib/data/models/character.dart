@@ -1,6 +1,41 @@
 import 'package:equatable/equatable.dart';
 
 
+class Info extends Equatable {
+  final int count;
+  final int pages;
+  final String? next;
+  final String? prev;
+
+  const Info({
+    required this.count,
+    required this.pages,
+    this.next,
+    this.prev,
+  });
+
+  @override
+  List<Object?> get props => [count, pages, next, prev];
+
+  factory Info.fromJson(Map<String, dynamic> json) {
+    return Info(
+      count: json['count'],
+      pages: json['pages'],
+      next: json['next'],
+      prev: json['prev'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'count': count,
+      'pages': pages,
+      'next': next,
+      'prev': prev,
+    };
+  }
+}
+
 class Character extends Equatable {
   final int id;
   final String name;

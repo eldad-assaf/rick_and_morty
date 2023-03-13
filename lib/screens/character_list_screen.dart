@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +14,6 @@ class CharacterListScreen extends StatefulWidget {
 }
 
 class _CharacterListScreenState extends State<CharacterListScreen> {
-  //final dio = Dio();
   late CharacterBloc _characterBloc;
 
   @override
@@ -21,6 +21,7 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
     super.initState();
     _characterBloc = BlocProvider.of<CharacterBloc>(context);
     _characterBloc.getAllCharacters();
+    _characterBloc.getOne();
   }
 
   @override
@@ -31,24 +32,68 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
       ),
       body: BlocBuilder<CharacterBloc, CharacterState>(
         builder: (context, state) {
-          print(state);
           if (state is CharacterLoading) {
             return const CircularProgressIndicator();
           } else if (state is CharacterLoaded) {
-            return ListView.builder(
-              itemCount: state.characters.length,
-              itemBuilder: (context, index) {
+            // ignore: unnecessary_cast
+            return GridView.builder(
+              // ignore: prefer_const_constructors
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 10.0,
+                crossAxisSpacing: 10.0,
+              ),
+              itemCount:
+                  state.characters.length, // Total number of items in the grid
+              itemBuilder: (BuildContext context, int index) {
+                // Return a widget for each item in the grid
                 final character = state.characters[index];
-                // return CharacterListItem(character: character);
-                return Text(character.name);
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            FullScreenImage(imageUrl: character.image),
+                      ),
+                    );
+                  },
+                  child: CachedNetworkImage(
+                    imageUrl: character.image,
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    fit: BoxFit.cover,
+                  ),
+                );
               },
             );
+            ;
           } else {
             return const Center(
               child: Text('Error fetching characters'),
             );
           }
         },
+      ),
+    );
+  }
+}
+
+class FullScreenImage extends StatelessWidget {
+  final String imageUrl;
+
+  const FullScreenImage({super.key, required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
