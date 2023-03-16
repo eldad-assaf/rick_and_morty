@@ -13,12 +13,23 @@ class LoadingCharactersState extends CharacterState {
   List<Object?> get props => [];
 }
 
+// class CharactersLoadedState extends CharacterState {
+//   final List<Character> characters;
+//   CharactersLoadedState(this.characters);
+
+//   @override
+//   List<Object?> get props => [characters];
+// }
+
 class CharactersLoadedState extends CharacterState {
-  final List<Character> characters;
-  CharactersLoadedState(this.characters);
+  final CharactersResponse charactersResponse;
+
+  CharactersLoadedState({
+    required this.charactersResponse,
+  });
 
   @override
-  List<Object?> get props => [characters];
+  List<Object?> get props => [charactersResponse];
 }
 
 class CharactersErrorState extends CharacterState {

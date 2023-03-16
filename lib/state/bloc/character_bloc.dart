@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -10,20 +8,20 @@ part 'character_state.dart';
 
 class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
   final CharacterRepository _characterRepository;
+
   CharacterBloc(this._characterRepository) : super(InitialState()) {
-    print(state);
     on<LoadCharactersEvent>(_loadCharacters);
   }
 
   void _loadCharacters(
       LoadCharactersEvent event, Emitter<CharacterState> emit) async {
-    print('_loadCharacters');
     emit(LoadingCharactersState());
 
     try {
-      final characters = await _characterRepository.getCharacters();
-      print(characters);
-      emit(CharactersLoadedState(characters));
+      final CharactersResponse charactersResponse =
+          await _characterRepository.getCharacters(event.page);
+
+      emit(CharactersLoadedState(charactersResponse:charactersResponse ));
     } catch (e) {
       emit(CharactersErrorState(e.toString()));
     }

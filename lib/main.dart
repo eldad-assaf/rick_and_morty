@@ -20,7 +20,7 @@ class RickAndMortyApp extends StatelessWidget {
         providers: [
           BlocProvider<CharacterBloc>(
             create: (context) => CharacterBloc(CharacterRepository())
-              ..add(LoadCharactersEvent()),
+              ..add(const LoadCharactersEvent(1)),
           ),
         ],
         child: MaterialApp(

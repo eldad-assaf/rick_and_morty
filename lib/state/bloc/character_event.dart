@@ -6,6 +6,10 @@ abstract class CharacterEvent extends Equatable {
 }
 
 class LoadCharactersEvent extends CharacterEvent {
+  final int page;
+
+  const LoadCharactersEvent(this.page);
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [page];
 }
