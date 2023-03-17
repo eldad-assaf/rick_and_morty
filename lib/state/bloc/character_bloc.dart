@@ -8,7 +8,7 @@ part 'character_state.dart';
 
 class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
   final CharacterRepository _characterRepository;
-  int page = 40;
+  int page = 1;
   bool isLoadingMore = false;
   bool hasReachedLastPage = false;
   final ScrollController scrollController = ScrollController();
@@ -25,37 +25,31 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
       if (charactersResponse != null) {
         // emit(CharactersLoadedState(characters: charactersResponse.characters));
         emit(CharactersLoadedState(
-            maxPagesFromApi: charactersResponse.totalPages,
-            characters: charactersResponse.characters));
+            characters: charactersResponse.characters,
+            totalPages: charactersResponse.totalPages));
       } else if (charactersResponse == null) {
         emit(const CharactersErrorState('opps'));
       }
     });
 
     on<LoadMoreCharactersEvent>((event, emit) async {
+      print(state.totalPages);
+      print(page);
       if (scrollController.position.pixels ==
-          scrollController.position.maxScrollExtent) {
-        if (page == state.maxPagesFromApi) {
-          hasReachedLastPage = true;
-          isLoadingMore = false;
-          return;
-        } else {
-          hasReachedLastPage = false;
-          isLoadingMore = true;
-          page++;
+              scrollController.position.maxScrollExtent &&
+          page != state.totalPages) {
+        print(page);
 
-          final CharactersResponse? charactersResponse =
-              await _characterRepository.getCharacters(page);
-          if (charactersResponse != null) {
-            emit(CharactersLoadedState(
-                maxPagesFromApi: charactersResponse.totalPages,
-                characters: [
-                  ...state.characters!,
-                  ...charactersResponse.characters
-                ]));
-          } else if (charactersResponse == null) {
-            emit(const CharactersErrorState('opps'));
-          }
+        page++;
+        final CharactersResponse? charactersResponse =
+            await _characterRepository.getCharacters(page);
+        if (charactersResponse != null) {
+          emit(CharactersLoadedState(characters: [
+            ...state.characters!,
+            ...charactersResponse.characters
+          ], totalPages: state.totalPages));
+        } else if (charactersResponse == null) {
+          emit(const CharactersErrorState('opps'));
         }
       }
     });

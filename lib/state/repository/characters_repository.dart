@@ -9,8 +9,8 @@ class CharacterRepository {
     final String endPoind =
         'https://rickandmortyapi.com/api/character?page=$page';
     try {
-      await Future.delayed(
-          const Duration(milliseconds: 200)); // Simulate delay of 2 seconds
+      // await Future.delayed(
+      //     const Duration(milliseconds: 200)); // Simulate delay of 2 seconds
 
       final Response response = await dio.get(endPoind);
 
@@ -19,6 +19,8 @@ class CharacterRepository {
             CharactersResponse.fromJson(response.data);
 
         return charactersResponse;
+      } else {
+        return null;
       }
     } on DioError catch (error) {
       throw Exception('Failed to load characters : ${error.message}');
@@ -29,10 +31,12 @@ class CharacterRepository {
 class CharactersResponse {
   final List<Character> characters;
   final int totalPages;
+  final int totalCount;
 
   CharactersResponse({
     required this.characters,
     required this.totalPages,
+    required this.totalCount,
   });
 
   factory CharactersResponse.fromJson(Map<String, dynamic> json) {
@@ -41,10 +45,12 @@ class CharactersResponse {
         .toList();
     final info = json['info'] as Map<String, dynamic>;
     final totalPages = info['pages'] as int;
+    final totalCount = info['count'] as int;
 
     return CharactersResponse(
       characters: characters,
       totalPages: totalPages,
+      totalCount: totalCount,
     );
   }
 }

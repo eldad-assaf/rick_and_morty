@@ -28,26 +28,19 @@ Widget blocBody(BuildContext context) {
         );
       }
       if (state is CharactersLoadedState) {
-        final isLoadingMore = context.read<CharacterBloc>().isLoadingMore;
-        // final hasReachedLastPage =
-        //     context.read<CharacterBloc>().hasReachedLastPage;
+        //  final isLoadingMore = context.read<CharacterBloc>().isLoadingMore;
+
         return GridView.builder(
           controller: context.read<CharacterBloc>().scrollController,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 0.75,
           ),
-          itemCount: isLoadingMore
-              ? state.characters!.length + 1
-              : state.characters!.length,
+          itemCount: state.characters!.length,
           itemBuilder: (BuildContext context, int index) {
-            if (index > state.characters!.length) {
-              return Container();
-            } else {
-              return CharacterItemWidget(
-                character: state.characters![index],
-              );
-            }
+            return CharacterItemWidget(
+              character: state.characters![index],
+            );
           },
         );
       }
