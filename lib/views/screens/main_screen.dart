@@ -31,7 +31,7 @@ Widget blocBody(BuildContext context) {
           controller: context.read<CharacterBloc>().scrollController,
           crossAxisCount: 2, // Show 2 characters per row
           childAspectRatio: 0.75, // Set the aspect ratio of each grid item
-          children: state.characters.map((character) {
+          children: state.characters!.map((character) {
             return CharacterItemWidget(character: character);
           }).toList(),
         );

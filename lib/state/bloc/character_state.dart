@@ -2,34 +2,36 @@ part of 'character_bloc.dart';
 
 @immutable
 abstract class CharacterState extends Equatable {
-  final List<Character> characters;
-  const CharacterState(this.characters);
+  final List<Character>? characters;
+  final int? maxPagesFromApi;
+  const CharacterState(this.characters, this.maxPagesFromApi);
 }
 
 class InitialState extends CharacterState {
-  const InitialState(super.characters);
+  const InitialState(super.characters, super.maxPagesFromApi);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [characters, maxPagesFromApi];
 }
 
 class LoadingCharactersState extends CharacterState {
-  const LoadingCharactersState(super.characters);
+  const LoadingCharactersState(super.characters, super.maxPagesFromApi);
 
   @override
   List<Object?> get props => [];
 }
 
 class CharactersLoadedState extends CharacterState {
-  const CharactersLoadedState({required characters}) : super(characters);
+  const CharactersLoadedState({required characters, required maxPagesFromApi})
+      : super(characters, maxPagesFromApi);
 
   @override
-  List<Object?> get props => [characters];
+  List<Object?> get props => [characters ,maxPagesFromApi];
 }
 
 class CharactersErrorState extends CharacterState {
   final String errorMessage;
-  CharactersErrorState(this.errorMessage) : super([]);
+  const CharactersErrorState(this.errorMessage) : super(null,null);
 
   @override
   List<Object?> get props => [errorMessage];

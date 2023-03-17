@@ -8,40 +8,59 @@ part 'character_state.dart';
 
 class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
   final CharacterRepository _characterRepository;
-  int page = 1;
+  int page = 30;
   bool isLoadingMore = false;
   final ScrollController scrollController = ScrollController();
 
-  CharacterBloc(this._characterRepository) : super(const InitialState([])) {
+  CharacterBloc(this._characterRepository)
+      : super(const InitialState(null, null)) {
     scrollController.addListener(() {
       add(LoadMoreCharactersEvent());
     });
     on<LoadCharactersEvent>((event, emit) async {
-      emit(const LoadingCharactersState([]));
+      emit(const LoadingCharactersState(null, null));
       final CharactersResponse? charactersResponse =
           await _characterRepository.getCharacters(page);
       if (charactersResponse != null) {
-        emit(CharactersLoadedState(characters: charactersResponse.characters));
+        // emit(CharactersLoadedState(characters: charactersResponse.characters));
+        emit(CharactersLoadedState(
+            maxPagesFromApi: charactersResponse.totalPages,
+            characters: charactersResponse.characters));
       } else if (charactersResponse == null) {
-        emit(CharactersErrorState('opps'));
+        emit(const CharactersErrorState('opps'));
       }
     });
 
     on<LoadMoreCharactersEvent>((event, emit) async {
       if (scrollController.position.pixels ==
           scrollController.position.maxScrollExtent) {
-        isLoadingMore = true;
-        page++;
-        
-        final CharactersResponse? charactersResponse =
-            await _characterRepository.getCharacters(page);
-        if (charactersResponse != null) {
-          emit(CharactersLoadedState(characters: [
-            ...state.characters,
-            ...charactersResponse.characters
-          ]));
-        } else if (charactersResponse == null) {
-          emit(CharactersErrorState('opps'));
+        if (page == state.maxPagesFromApi) {
+          return;
+        } else {
+          isLoadingMore = true;
+          page++;
+          // if (state.charactersResponse!.totalPages < page) {
+          //   print(page);
+          //   print(state.charactersResponse!.totalPages);
+          //   print('last page');
+          //   return;
+          // }
+          final CharactersResponse? charactersResponse =
+              await _characterRepository.getCharacters(page);
+          if (charactersResponse != null) {
+            // emit(CharactersLoadedState(characters: [
+            //   ...state.characters,
+            //   ...charactersResponse.characters
+            // ]));
+            emit(CharactersLoadedState(
+                maxPagesFromApi: charactersResponse.totalPages,
+                characters: [
+                  ...state.characters!,
+                  ...charactersResponse.characters
+                ]));
+          } else if (charactersResponse == null) {
+            emit(const CharactersErrorState('opps'));
+          }
         }
       }
     });
