@@ -8,8 +8,9 @@ part 'character_state.dart';
 
 class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
   final CharacterRepository _characterRepository;
-  int page = 30;
+  int page = 40;
   bool isLoadingMore = false;
+  bool hasReachedLastPage = false;
   final ScrollController scrollController = ScrollController();
 
   CharacterBloc(this._characterRepository)
@@ -35,23 +36,17 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
       if (scrollController.position.pixels ==
           scrollController.position.maxScrollExtent) {
         if (page == state.maxPagesFromApi) {
+          hasReachedLastPage = true;
+          isLoadingMore = false;
           return;
         } else {
+          hasReachedLastPage = false;
           isLoadingMore = true;
           page++;
-          // if (state.charactersResponse!.totalPages < page) {
-          //   print(page);
-          //   print(state.charactersResponse!.totalPages);
-          //   print('last page');
-          //   return;
-          // }
+
           final CharactersResponse? charactersResponse =
               await _characterRepository.getCharacters(page);
           if (charactersResponse != null) {
-            // emit(CharactersLoadedState(characters: [
-            //   ...state.characters,
-            //   ...charactersResponse.characters
-            // ]));
             emit(CharactersLoadedState(
                 maxPagesFromApi: charactersResponse.totalPages,
                 characters: [

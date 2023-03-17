@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
 
 import '../models/character_model.dart';
 
@@ -11,6 +9,9 @@ class CharacterRepository {
     final String endPoind =
         'https://rickandmortyapi.com/api/character?page=$page';
     try {
+      await Future.delayed(
+          const Duration(milliseconds: 200)); // Simulate delay of 2 seconds
+
       final Response response = await dio.get(endPoind);
 
       if (response.statusCode == 200) {
@@ -22,7 +23,6 @@ class CharacterRepository {
     } on DioError catch (error) {
       throw Exception('Failed to load characters : ${error.message}');
     }
-    
   }
 }
 

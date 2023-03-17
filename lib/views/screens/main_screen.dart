@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty/state/bloc/character_bloc.dart';
@@ -27,13 +28,27 @@ Widget blocBody(BuildContext context) {
         );
       }
       if (state is CharactersLoadedState) {
-        return GridView.count(
+        final isLoadingMore = context.read<CharacterBloc>().isLoadingMore;
+        // final hasReachedLastPage =
+        //     context.read<CharacterBloc>().hasReachedLastPage;
+        return GridView.builder(
           controller: context.read<CharacterBloc>().scrollController,
-          crossAxisCount: 2, // Show 2 characters per row
-          childAspectRatio: 0.75, // Set the aspect ratio of each grid item
-          children: state.characters!.map((character) {
-            return CharacterItemWidget(character: character);
-          }).toList(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 0.75,
+          ),
+          itemCount: isLoadingMore
+              ? state.characters!.length + 1
+              : state.characters!.length,
+          itemBuilder: (BuildContext context, int index) {
+            if (index > state.characters!.length) {
+              return Container();
+            } else {
+              return CharacterItemWidget(
+                character: state.characters![index],
+              );
+            }
+          },
         );
       }
       return Container();
@@ -49,24 +64,166 @@ class CharacterItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailScreen(character: character),
+          ),
+        );
+      },
+      child: Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: CachedNetworkImage(
+                imageUrl: character.image,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                character.name,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// class DetailScreen extends StatelessWidget {
+//   final Character character;
+
+//   const DetailScreen({Key? key, required this.character}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Colors.pink,
+//       body: Column(
+//         children: [
+//           SizedBox(
+//             height: MediaQuery.of(context).size.height / 3,
+//             width: double.infinity,
+//             child: AspectRatio(
+//               aspectRatio: 16 / 9,
+//               child: CachedNetworkImage(
+//                 imageUrl: character.image,
+//                 fit: BoxFit.cover,
+//               ),
+//             ),
+//           ),
+//           Expanded(
+//             child: Container(
+//               width: MediaQuery.of(context).size.width,
+//               padding: const EdgeInsets.all(16.0),
+//               decoration: BoxDecoration(
+//                 color: Colors.pink.shade400,
+//                 // borderRadius: BorderRadius.only(
+//                 //   topLeft: Radius.circular(30.0),
+//                 //   topRight: Radius.circular(30.0),
+//                 // ),
+//               ),
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   const SizedBox(height: 16.0),
+//                   Text(
+//                     character.name,
+//                     style: const TextStyle(
+//                       fontSize: 28.0,
+//                       fontWeight: FontWeight.bold,
+//                       color: Colors.blue,
+//                     ),
+//                   ),
+//                   const SizedBox(height: 16.0),
+//                   Text(
+//                     "Status: ${character.status}\nSpecies: ${character.species}\nType: ${character.type.isEmpty ? "Unknown" : character.type}\nGender: ${character.gender}",
+//                     style: const TextStyle(
+//                       wordSpacing: 2,
+//                       fontSize: 22.0,
+//                       color: Colors.white,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+//}
+class DetailScreen extends StatelessWidget {
+  final Character character;
+
+  const DetailScreen({Key? key, required this.character}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.pink,
+      body: Column(
         children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height / 3,
+            width: double.infinity,
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: CachedNetworkImage(
+                imageUrl: character.image,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
           Expanded(
-            child: Image.network(
-              character.image,
-              fit: BoxFit.cover,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.pink.shade400,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 16.0),
+                  Text(
+                    character.name,
+                    style: const TextStyle(
+                      fontSize: 28.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+                  Text(
+                    "Status: ${character.status}\nSpecies: ${character.species}\nType: ${character.type.isEmpty ? "Unknown" : character.type}\nGender: ${character.gender}",
+                    style: const TextStyle(
+                      wordSpacing: 2,
+                      fontSize: 22.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(
-              character.name,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-              ),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Back'),
             ),
           ),
         ],
