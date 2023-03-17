@@ -16,20 +16,23 @@ class RickAndMortyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-        providers: [
-          BlocProvider<CharacterBloc>(
-            create: (context) => CharacterBloc(CharacterRepository())
-              ..add(const LoadCharactersEvent(1)),
-          ),
-        ],
-        child: MaterialApp(
-          title: 'Rick and morty app',
-          theme: ThemeData.dark(),
-          initialRoute: '/',
-          routes: {
-            '/': (context) => const MainScreen(),
-          },
-        ));
+    return RepositoryProvider(
+      create: (context) => CharacterRepository(dio: Dio()),
+      child: MultiBlocProvider(
+          providers: [
+            BlocProvider<CharacterBloc>(
+              create: (context) => CharacterBloc(RepositoryProvider.of(context))
+                ..add(LoadCharactersEvent()),
+            ),
+          ],
+          child: MaterialApp(
+            title: 'Rick and morty app',
+            theme: ThemeData.dark(),
+            initialRoute: '/',
+            routes: {
+              '/': (context) => const MainScreen(),
+            },
+          )),
+    );
   }
 }

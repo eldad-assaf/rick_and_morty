@@ -1,15 +1,8 @@
 part of 'character_bloc.dart';
 
 @immutable
-abstract class CharacterEvent extends Equatable {
-  const CharacterEvent();
-}
+abstract class CharacterEvent {}
 
-class LoadCharactersEvent extends CharacterEvent {
-  final int page;
+class LoadCharactersEvent extends CharacterEvent {}
 
-  const LoadCharactersEvent(this.page);
-
-  @override
-  List<Object?> get props => [page];
-}
+class LoadMoreCharactersEvent extends CharacterEvent {}

@@ -1,19 +1,28 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/character_model.dart';
 
 class CharacterRepository {
-  Future<CharactersResponse> getCharacters(int page) async {
-    final response = await http
-        .get(Uri.parse('https://rickandmortyapi.com/api/character?page=$page'));
+  final Dio dio;
+  CharacterRepository({required this.dio});
+  Future<CharactersResponse?> getCharacters(int page) async {
+    final String endPoind =
+        'https://rickandmortyapi.com/api/character?page=$page';
+    try {
+      final Response response = await dio.get(endPoind);
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return CharactersResponse.fromJson(data);
-    } else {
-      throw Exception('Failed to load characters');
+      if (response.statusCode == 200) {
+        final CharactersResponse charactersResponse =
+            CharactersResponse.fromJson(response.data);
+
+        return charactersResponse;
+      }
+    } on DioError catch (error) {
+      throw Exception('Failed to load characters : ${error.message}');
     }
+    
   }
 }
 
