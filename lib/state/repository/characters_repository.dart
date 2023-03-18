@@ -10,7 +10,7 @@ class CharacterRepository {
         'https://rickandmortyapi.com/api/character?page=$page';
     try {
       // await Future.delayed(
-      //     const Duration(milliseconds: 200)); // Simulate delay of 2 seconds
+      //     const Duration(seconds: 2)); // Simulate delay of 2 seconds
 
       final Response response = await dio.get(endPoind);
 
@@ -30,27 +30,21 @@ class CharacterRepository {
 
 class CharactersResponse {
   final List<Character> characters;
-  final int totalPages;
-  final int totalCount;
+  final int count;
+  final String? nextPage;
 
-  CharactersResponse({
-    required this.characters,
-    required this.totalPages,
-    required this.totalCount,
-  });
+  CharactersResponse(
+      {required this.characters, required this.count, required this.nextPage});
 
   factory CharactersResponse.fromJson(Map<String, dynamic> json) {
     final characters = (json['results'] as List<dynamic>)
         .map((json) => Character.fromJson(json))
         .toList();
     final info = json['info'] as Map<String, dynamic>;
-    final totalPages = info['pages'] as int;
-    final totalCount = info['count'] as int;
+    final count = info['count'] as int;
+    final next = info['next'] as String?;
 
     return CharactersResponse(
-      characters: characters,
-      totalPages: totalPages,
-      totalCount: totalCount,
-    );
+        characters: characters, count: count, nextPage: next);
   }
 }

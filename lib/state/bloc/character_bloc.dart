@@ -14,40 +14,42 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
   final ScrollController scrollController = ScrollController();
 
   CharacterBloc(this._characterRepository)
-      : super(const InitialState(null, null)) {
+      : super(const InitialState(null, null, null)) {
     scrollController.addListener(() {
       add(LoadMoreCharactersEvent());
     });
     on<LoadCharactersEvent>((event, emit) async {
-      emit(const LoadingCharactersState(null, null));
+      emit(const LoadingCharactersState(null, null, null));
       final CharactersResponse? charactersResponse =
           await _characterRepository.getCharacters(page);
       if (charactersResponse != null) {
         // emit(CharactersLoadedState(characters: charactersResponse.characters));
         emit(CharactersLoadedState(
             characters: charactersResponse.characters,
-            totalPages: charactersResponse.totalPages));
+            count: charactersResponse.count,
+            next: charactersResponse.nextPage));
       } else if (charactersResponse == null) {
         emit(const CharactersErrorState('opps'));
       }
     });
 
     on<LoadMoreCharactersEvent>((event, emit) async {
-      print(state.totalPages);
-      print(page);
       if (scrollController.position.pixels ==
               scrollController.position.maxScrollExtent &&
-          page != state.totalPages) {
-        print(page);
-
+          state.next != null) {
+        isLoadingMore = true;
         page++;
         final CharactersResponse? charactersResponse =
             await _characterRepository.getCharacters(page);
         if (charactersResponse != null) {
-          emit(CharactersLoadedState(characters: [
-            ...state.characters!,
-            ...charactersResponse.characters
-          ], totalPages: state.totalPages));
+          emit(CharactersLoadedState(
+            characters: [
+              ...state.characters!,
+              ...charactersResponse.characters
+            ],
+            count: state.count,
+            next: charactersResponse.nextPage,
+          ));
         } else if (charactersResponse == null) {
           emit(const CharactersErrorState('opps'));
         }

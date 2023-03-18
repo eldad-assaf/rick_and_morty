@@ -28,19 +28,48 @@ Widget blocBody(BuildContext context) {
         );
       }
       if (state is CharactersLoadedState) {
-        //  final isLoadingMore = context.read<CharacterBloc>().isLoadingMore;
-
+        final isLoadingMore = context.read<CharacterBloc>().isLoadingMore;
         return GridView.builder(
           controller: context.read<CharacterBloc>().scrollController,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 0.75,
           ),
-          itemCount: state.characters!.length,
+          itemCount: isLoadingMore
+              ? state.characters!.length + 1
+              : state.characters!.length,
           itemBuilder: (BuildContext context, int index) {
-            return CharacterItemWidget(
-              character: state.characters![index],
-            );
+            if (index == state.count) {
+              return const Card(
+                child: Center(
+                  child: Text(
+                    'The end',
+                    style: TextStyle(color: Colors.blue, fontSize: 24),
+                  ),
+                ),
+              );
+            } else if (index >= state.characters!.length) {
+              print(state.characters!.length); // 826
+              return Card(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    CircularProgressIndicator(color: Colors.pink),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Text(
+                      'loading...',
+                      style: TextStyle(color: Colors.blue, fontSize: 24),
+                    )
+                  ],
+                ),
+              );
+            } else {
+              return CharacterItemWidget(
+                character: state.characters![index],
+              );
+            }
           },
         );
       }
