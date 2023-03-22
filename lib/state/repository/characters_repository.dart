@@ -1,3 +1,4 @@
+
 import 'package:dio/dio.dart';
 
 import '../models/character_model.dart';
@@ -5,6 +6,7 @@ import '../models/character_model.dart';
 class CharacterRepository {
   final Dio dio;
   CharacterRepository({required this.dio});
+
   Future<CharactersResponse?> getCharacters(int page) async {
     final String endPoind =
         'https://rickandmortyapi.com/api/character?page=$page';
@@ -24,6 +26,31 @@ class CharacterRepository {
       }
     } on DioError catch (error) {
       throw Exception('Failed to load characters : ${error.message}');
+    }
+  }
+
+  Future<CharactersResponse?> searchCharacters({required String name , required int page}) async {
+    final String endPoind =
+        'https://rickandmortyapi.com/api/character/?name=$name&page=$page';
+        //https://rickandmortyapi.com/api/character/?name=r&page=30
+
+    try {
+      final Response response = await dio.get(endPoind);
+      if (response.statusCode == 200) {
+        final CharactersResponse charactersResponse =
+            CharactersResponse.fromJson(response.data);
+
+        return charactersResponse;
+      } else {
+        throw Exception(
+            'Failed to load characters : ${response.statusMessage}');
+      }
+    } on DioError catch (error) {
+      if (error.response?.statusCode == 404) {
+        return null;
+      } else {
+        throw Exception('Failed to load characters : ${error.message}');
+      }
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,15 +11,18 @@ part 'character_state.dart';
 class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
   final CharacterRepository _characterRepository;
   int page = 1;
+  int searchPage = 1;
   bool isLoadingMore = false;
   bool hasReachedLastPage = false;
-  final ScrollController scrollController = ScrollController();
+  final ScrollController allCharactersScrollController = ScrollController();
+  final ScrollController searchResultsScrollController = ScrollController();
 
   CharacterBloc(this._characterRepository)
       : super(const InitialState(null, null, null)) {
-    scrollController.addListener(() {
+    allCharactersScrollController.addListener(() {
       add(LoadMoreCharactersEvent());
     });
+
     on<LoadCharactersEvent>((event, emit) async {
       emit(const LoadingCharactersState(null, null, null));
       final CharactersResponse? charactersResponse =
@@ -33,9 +38,37 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
       }
     });
 
+    on<LoadSearchPageEvent>((event, emit) {
+      emit(const InitialState(null, null, null));
+    });
+
+    on<SearchCharacterEvent>(
+      (event, emit) async {
+        searchResultsScrollController.addListener(
+          () {
+            add(LoadMoreSearchResultsEvent(name: event.name));
+          },
+        );
+        emit(const LoadingCharactersState(null, null, null));
+        final CharactersResponse? charactersResponse =
+            await _characterRepository.searchCharacters(
+                name: event.name, page: searchPage);
+        if (charactersResponse != null) {
+          emit(CharactersLoadedState(
+              characters: charactersResponse.characters,
+              count: charactersResponse.count,
+              next: charactersResponse.nextPage));
+        } else if (charactersResponse == null) {
+          print('charactersResponse == null 1');
+
+          emit(const CharactersErrorState('opps'));
+        }
+      },
+    );
+
     on<LoadMoreCharactersEvent>((event, emit) async {
-      if (scrollController.position.pixels ==
-              scrollController.position.maxScrollExtent &&
+      if (allCharactersScrollController.position.pixels ==
+              allCharactersScrollController.position.maxScrollExtent &&
           state.next != null) {
         isLoadingMore = true;
         page++;
@@ -51,6 +84,34 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
             next: charactersResponse.nextPage,
           ));
         } else if (charactersResponse == null) {
+          print('charactersResponse == null 3');
+
+          emit(const CharactersErrorState('opps'));
+        }
+      }
+    });
+
+    on<LoadMoreSearchResultsEvent>((event, emit) async {
+      if (searchResultsScrollController.position.pixels ==
+              searchResultsScrollController.position.maxScrollExtent &&
+          state.next != null) {
+        isLoadingMore = true;
+        searchPage++;
+        print(event.name);
+        final CharactersResponse? charactersResponse =
+            await _characterRepository.searchCharacters(
+                name: event.name, page: searchPage);
+        if (charactersResponse != null) {
+          emit(CharactersLoadedState(
+            characters: [
+              ...state.characters!,
+              ...charactersResponse.characters
+            ],
+            count: state.count,
+            next: charactersResponse.nextPage,
+          ));
+        } else if (charactersResponse == null) {
+          print('charactersResponse == null 2');
           emit(const CharactersErrorState('opps'));
         }
       }

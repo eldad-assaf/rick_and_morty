@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty/state/bloc/character_bloc.dart';
+import 'package:rick_and_morty/views/screens/search.dart';
 
 import '../../state/models/character_model.dart';
 
@@ -15,7 +16,12 @@ class MainScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
-            onPressed: () {},
+            onPressed: () {
+              context.read<CharacterBloc>().add(LoadSearchPageEvent());
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const SearchPage(),
+              ));
+            },
           )
         ],
       ),
@@ -38,7 +44,8 @@ Widget blocBody(BuildContext context) {
       if (state is CharactersLoadedState) {
         final isLoadingMore = context.read<CharacterBloc>().isLoadingMore;
         return GridView.builder(
-          controller: context.read<CharacterBloc>().scrollController,
+          controller:
+              context.read<CharacterBloc>().allCharactersScrollController,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 0.75,
@@ -57,7 +64,6 @@ Widget blocBody(BuildContext context) {
                 ),
               );
             } else if (index >= state.characters!.length) {
-              print(state.characters!.length); // 826
               return Card(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
