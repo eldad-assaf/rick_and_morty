@@ -5,6 +5,9 @@ import 'dart:async';
 
 import 'package:rick_and_morty/views/screens/main_screen.dart';
 
+import '../animations/search_animation_view.dart';
+import '../animations/search_with_text_animation_view.dart';
+
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
 
@@ -22,7 +25,6 @@ class _SearchPageState extends State<SearchPage> {
         BlocProvider.of<CharacterBloc>(context).add(ResetSearchPage());
         BlocProvider.of<CharacterBloc>(context)
             .add(SearchCharacterEvent(name: newText.trimLeft().trimRight()));
-
       }
     });
   }
@@ -59,9 +61,12 @@ class _SearchPageState extends State<SearchPage> {
               child: BlocBuilder<CharacterBloc, CharacterState>(
                 builder: (context, state) {
                   if (state is InitialState) {
-                    return const Center(
-                      child: Text('Type the character name'),
+                    return const SliverToBoxAdapter(
+                      child: SearchWithTextAnimationView(
+                        text: 'search!',
+                      ),
                     );
+                    ;
                   } else if (state is LoadingCharactersState) {
                     return const Center(
                       child: Text('loading state!'),
