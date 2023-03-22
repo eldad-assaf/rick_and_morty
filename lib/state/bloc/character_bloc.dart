@@ -1,3 +1,4 @@
+import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
   final ScrollController searchResultsScrollController = ScrollController();
 
   CharacterBloc(this._characterRepository)
-      : super(const InitialState(null, null, null)) {
+      : super(const InitialState(null, null, null, null)) {
     allCharactersScrollController.addListener(() {
       lastScrollPosition = allCharactersScrollController.position;
       add(LoadMoreCharactersEvent());
@@ -30,7 +31,8 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
       final CharactersResponse charactersResponse = CharactersResponse(
           characters: state.characters!,
           count: state.count!,
-          nextPage: state.next);
+          nextPageUrl: state.nextPageUrl,
+          nextPageNumber: state.nextPageNumber);
 
       charactersResponseStorage.characterResponse = charactersResponse;
     });
@@ -42,6 +44,7 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
             curve: Curves.easeInSine);
       }
     });
+
     on<LoadCharactersEvent>((event, emit) async {
       final charactersResponseStorage = CharactersResponseStorage();
       final charactersResponseFromStorage =
@@ -49,47 +52,51 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
 
       if (charactersResponseFromStorage != null) {
         emit(CharactersLoadedState(
-          characters: charactersResponseFromStorage.characters,
-          count: charactersResponseFromStorage.count,
-          next: charactersResponseFromStorage.nextPage,
-        ));
+            characters: charactersResponseFromStorage.characters,
+            count: charactersResponseFromStorage.count,
+            nextPageUrl: charactersResponseFromStorage.nextPageUrl,
+            nextPageNumber: charactersResponseFromStorage.nextPageNumber));
 
         return;
       }
-      emit(const LoadingCharactersState(null, null, null));
+      emit(const LoadingCharactersState(null, null, null, null));
       final CharactersResponse? charactersResponse =
           await _characterRepository.getCharacters(page);
       if (charactersResponse != null) {
         emit(CharactersLoadedState(
             characters: charactersResponse.characters,
             count: charactersResponse.count,
-            next: charactersResponse.nextPage));
+            nextPageUrl: charactersResponse.nextPageUrl,
+            nextPageNumber: charactersResponse.nextPageNumber));
       } else if (charactersResponse == null) {
         emit(const CharactersErrorState('opps'));
       }
     });
 
     on<LoadSearchPageEvent>((event, emit) {
-      emit(const InitialState(null, null, null));
+      emit(const InitialState(null, null, null, null));
     });
 
     on<SearchCharacterEvent>(
       (event, emit) async {
+        log('event name : ${event.name}');
         searchResultsScrollController.addListener(
           () {
+            log('Listener call!');
             add(LoadMoreSearchResultsEvent(name: event.name));
           },
         );
-        emit(const LoadingCharactersState(null, null, null));
+        emit(const LoadingCharactersState(null, null, null, null));
         final CharactersResponse? charactersResponse =
             await _characterRepository.searchCharacters(
                 name: event.name, page: searchPage);
         if (charactersResponse != null) {
+          log('emmiting CharactersLoadedState from SearchCharacterEvent');
           emit(CharactersLoadedState(
-            characters: charactersResponse.characters,
-            count: charactersResponse.count,
-            next: charactersResponse.nextPage,
-          ));
+              characters: charactersResponse.characters,
+              count: charactersResponse.count,
+              nextPageUrl: charactersResponse.nextPageUrl,
+              nextPageNumber: charactersResponse.nextPageNumber));
         } else if (charactersResponse == null) {
           emit(const CharactersErrorState('Character Not Found'));
         }
@@ -99,20 +106,20 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
     on<LoadMoreCharactersEvent>((event, emit) async {
       if (allCharactersScrollController.position.pixels ==
               allCharactersScrollController.position.maxScrollExtent &&
-          state.next != null) {
+          state.nextPageUrl != null) {
         isLoadingMore = true;
         page++;
         final CharactersResponse? charactersResponse =
             await _characterRepository.getCharacters(page);
         if (charactersResponse != null) {
           emit(CharactersLoadedState(
-            characters: [
-              ...state.characters!,
-              ...charactersResponse.characters
-            ],
-            count: state.count,
-            next: charactersResponse.nextPage,
-          ));
+              characters: [
+                ...state.characters!,
+                ...charactersResponse.characters
+              ],
+              count: state.count,
+              nextPageUrl: charactersResponse.nextPageUrl,
+              nextPageNumber: charactersResponse.nextPageNumber));
         } else if (charactersResponse == null) {
           emit(const CharactersErrorState('opps'));
         }
@@ -122,21 +129,29 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
     on<LoadMoreSearchResultsEvent>((event, emit) async {
       if (searchResultsScrollController.position.pixels ==
               searchResultsScrollController.position.maxScrollExtent &&
-          state.next != null) {
+          state.nextPageUrl != null &&
+          state.nextPageNumber != null) {
         isLoadingMore = true;
-        searchPage++;
+        //searchPage++;
+        //makes isuues!
+        //try to replace with next page grom the api response
+
+        log('next : ${state.nextPageNumber}');
+        log('next : ${state.nextPageUrl}');
+
         final CharactersResponse? charactersResponse =
             await _characterRepository.searchCharacters(
-                name: event.name, page: searchPage);
+                name: event.name, page: state.nextPageNumber!);
+        log('charactersResponse from LoadMoreSearchResultsEvent ${charactersResponse} ');
         if (charactersResponse != null) {
           emit(CharactersLoadedState(
-            characters: [
-              ...state.characters!,
-              ...charactersResponse.characters
-            ],
-            count: state.count,
-            next: charactersResponse.nextPage,
-          ));
+              characters: [
+                ...state.characters!,
+                ...charactersResponse.characters
+              ],
+              count: state.count,
+              nextPageUrl: charactersResponse.nextPageUrl,
+              nextPageNumber: charactersResponse.nextPageNumber));
         } else if (charactersResponse == null) {
           emit(const CharactersErrorState('opps'));
         }
@@ -144,7 +159,8 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
     });
 
     on<GoBackToInitStateEvent>(
-        (event, emit) => emit(const InitialState(null, null, null)));
+        (event, emit) => emit(const InitialState(null, null, null, null)));
+
     on<ResetSearchPage>((event, emit) {
       page = 1;
       searchPage = 1;

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty/state/bloc/character_bloc.dart';
@@ -13,25 +15,28 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final _debouncer = Debouncer(
-      const Duration(milliseconds: 800)); // <-- set the delay time here
+  final _debouncer =
+      Debouncer(const Duration(seconds: 2)); // <-- set the delay time here
 
   void _onTextChanged(String newText) {
+    log('_onTextChanged');
+    log(newText);
     _debouncer.run(() {
       if (newText.trim().isNotEmpty) {
-        BlocProvider.of<CharacterBloc>(context).add(ResetSearchPage());
+        // BlocProvider.of<CharacterBloc>(context).add(ResetSearchPage());
         BlocProvider.of<CharacterBloc>(context)
-            .add(SearchCharacterEvent(name: newText.trimLeft().trimRight()));
+            .add(SearchCharacterEvent(name: newText.trim()));
       }
       if (newText.trim().isEmpty) {
-        BlocProvider.of<CharacterBloc>(context).add(GoBackToInitStateEvent());
+        log('WTF');
+        // BlocProvider.of<CharacterBloc>(context).add(GoBackToInitStateEvent());
       }
     });
   }
 
   @override
   void dispose() {
-    _debouncer.cancel(); // <-- cancel the debouncer to prevent memory leaks
+    _debouncer.cancel();
     super.dispose();
   }
 
@@ -68,7 +73,7 @@ class _SearchPageState extends State<SearchPage> {
                     );
                   } else if (state is LoadingCharactersState) {
                     return const Center(
-                      child: Text('loading state!'),
+                      child: CircularProgressIndicator(),
                     );
                   } else if (state is CharactersLoadedState) {
                     final isLoadingMore =
