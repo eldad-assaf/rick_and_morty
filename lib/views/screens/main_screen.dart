@@ -18,7 +18,6 @@ class MainScreen extends StatelessWidget {
             icon: const Icon(Icons.search),
             onPressed: () {
               context.read<CharacterBloc>().add(SaveCurrentCharacterResponse());
-
               context.read<CharacterBloc>().add(LoadSearchPageEvent());
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => const SearchPage(),

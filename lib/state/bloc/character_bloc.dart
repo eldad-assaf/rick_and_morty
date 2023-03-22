@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,12 +54,6 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
           count: charactersResponseFromStorage.count,
           next: charactersResponseFromStorage.nextPage,
         ));
-
-//   _scrollController.animateTo(
-//   _savedScrollPosition.pixels,
-//   duration: Duration(milliseconds: 500),
-//   curve: Curves.easeInOut,
-// );
 
         return;
       }
