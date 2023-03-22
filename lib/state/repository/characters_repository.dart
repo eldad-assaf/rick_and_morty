@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 
 import '../models/character_model.dart';
@@ -7,14 +6,19 @@ class CharacterRepository {
   final Dio dio;
   CharacterRepository({required this.dio});
 
+  final String endPoind = 'https://rickandmortyapi.com/api/character/';
+
   Future<CharactersResponse?> getCharacters(int page) async {
-    final String endPoind =
-        'https://rickandmortyapi.com/api/character?page=$page';
+    Map<String, dynamic> _params = {'page': page};
+
+    // final String endPoind =
+    //     'https://rickandmortyapi.com/api/character?page=$page';
     try {
       // await Future.delayed(
       //     const Duration(seconds: 2)); // Simulate delay of 2 seconds
 
-      final Response response = await dio.get(endPoind);
+      final Response response =
+          await dio.get(endPoind, queryParameters: _params);
 
       if (response.statusCode == 200) {
         final CharactersResponse charactersResponse =
@@ -29,13 +33,13 @@ class CharacterRepository {
     }
   }
 
-  Future<CharactersResponse?> searchCharacters({required String name , required int page}) async {
-    final String endPoind =
-        'https://rickandmortyapi.com/api/character/?name=$name&page=$page';
-        //https://rickandmortyapi.com/api/character/?name=r&page=30
+  Future<CharactersResponse?> searchCharacters(
+      {required String name, required int page}) async {
+    Map<String, dynamic> _params = {'name': name, 'page': page};
 
     try {
-      final Response response = await dio.get(endPoind);
+      final Response response =
+          await dio.get(endPoind, queryParameters: _params);
       if (response.statusCode == 200) {
         final CharactersResponse charactersResponse =
             CharactersResponse.fromJson(response.data);
@@ -47,6 +51,7 @@ class CharacterRepository {
       }
     } on DioError catch (error) {
       if (error.response?.statusCode == 404) {
+        //when no caracters available for the search name the api returns 404 error
         return null;
       } else {
         throw Exception('Failed to load characters : ${error.message}');

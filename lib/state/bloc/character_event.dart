@@ -10,7 +10,7 @@ class LoadMoreCharactersEvent extends CharacterEvent {}
 class LoadSearchPageEvent extends CharacterEvent {}
 
 class LoadMoreSearchResultsEvent extends CharacterEvent {
-    final String name;
+  final String name;
   LoadMoreSearchResultsEvent({required this.name});
 }
 
@@ -18,3 +18,5 @@ class SearchCharacterEvent extends CharacterEvent {
   final String name;
   SearchCharacterEvent({required this.name});
 }
+
+class ResetSearchPage extends CharacterEvent {}

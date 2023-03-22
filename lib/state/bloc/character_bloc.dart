@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +26,6 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
       final CharactersResponse? charactersResponse =
           await _characterRepository.getCharacters(page);
       if (charactersResponse != null) {
-        // emit(CharactersLoadedState(characters: charactersResponse.characters));
         emit(CharactersLoadedState(
             characters: charactersResponse.characters,
             count: charactersResponse.count,
@@ -97,7 +94,6 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
           state.next != null) {
         isLoadingMore = true;
         searchPage++;
-        print(event.name);
         final CharactersResponse? charactersResponse =
             await _characterRepository.searchCharacters(
                 name: event.name, page: searchPage);
@@ -115,6 +111,11 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
           emit(const CharactersErrorState('opps'));
         }
       }
+    });
+
+    on<ResetSearchPage>((event, emit) {
+      page = 1;
+      searchPage = 1;
     });
   }
 }
