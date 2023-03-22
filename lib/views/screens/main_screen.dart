@@ -17,6 +17,8 @@ class MainScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
+              context.read<CharacterBloc>().add(SaveCurrentCharacterResponse());
+
               context.read<CharacterBloc>().add(LoadSearchPageEvent());
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => const SearchPage(),
@@ -43,6 +45,8 @@ Widget blocBody(BuildContext context) {
       }
       if (state is CharactersLoadedState) {
         final isLoadingMore = context.read<CharacterBloc>().isLoadingMore;
+        context.read<CharacterBloc>().add(ScrollToLastPosition());
+
         return GridView.builder(
           controller:
               context.read<CharacterBloc>().allCharactersScrollController,

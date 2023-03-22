@@ -12,16 +12,55 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
   int searchPage = 1;
   bool isLoadingMore = false;
   bool hasReachedLastPage = false;
+  ScrollPosition? lastScrollPosition;
   final ScrollController allCharactersScrollController = ScrollController();
   final ScrollController searchResultsScrollController = ScrollController();
 
   CharacterBloc(this._characterRepository)
       : super(const InitialState(null, null, null)) {
     allCharactersScrollController.addListener(() {
+      lastScrollPosition = allCharactersScrollController.position;
       add(LoadMoreCharactersEvent());
     });
 
+    on<SaveCurrentCharacterResponse>((event, emit) {
+      final charactersResponseStorage = CharactersResponseStorage();
+
+      final CharactersResponse charactersResponse = CharactersResponse(
+          characters: state.characters!,
+          count: state.count!,
+          nextPage: state.next);
+
+      charactersResponseStorage.characterResponse = charactersResponse;
+    });
+
+    on<ScrollToLastPosition>((event, emit) {
+      if (lastScrollPosition != null) {
+        allCharactersScrollController.animateTo(lastScrollPosition!.pixels,
+            duration: const Duration(microseconds: 1),
+            curve: Curves.easeInSine);
+      }
+    });
     on<LoadCharactersEvent>((event, emit) async {
+      final charactersResponseStorage = CharactersResponseStorage();
+      final charactersResponseFromStorage =
+          charactersResponseStorage.charactersResponse;
+
+      if (charactersResponseFromStorage != null) {
+        emit(CharactersLoadedState(
+          characters: charactersResponseFromStorage.characters,
+          count: charactersResponseFromStorage.count,
+          next: charactersResponseFromStorage.nextPage,
+        ));
+
+//   _scrollController.animateTo(
+//   _savedScrollPosition.pixels,
+//   duration: Duration(milliseconds: 500),
+//   curve: Curves.easeInOut,
+// );
+
+        return;
+      }
       emit(const LoadingCharactersState(null, null, null));
       final CharactersResponse? charactersResponse =
           await _characterRepository.getCharacters(page);
@@ -52,12 +91,11 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
                 name: event.name, page: searchPage);
         if (charactersResponse != null) {
           emit(CharactersLoadedState(
-              characters: charactersResponse.characters,
-              count: charactersResponse.count,
-              next: charactersResponse.nextPage));
+            characters: charactersResponse.characters,
+            count: charactersResponse.count,
+            next: charactersResponse.nextPage,
+          ));
         } else if (charactersResponse == null) {
-          print('charactersResponse == null 1');
-
           emit(const CharactersErrorState('opps'));
         }
       },
@@ -81,8 +119,6 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
             next: charactersResponse.nextPage,
           ));
         } else if (charactersResponse == null) {
-          print('charactersResponse == null 3');
-
           emit(const CharactersErrorState('opps'));
         }
       }
@@ -107,7 +143,6 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
             next: charactersResponse.nextPage,
           ));
         } else if (charactersResponse == null) {
-          print('charactersResponse == null 2');
           emit(const CharactersErrorState('opps'));
         }
       }
@@ -118,4 +153,23 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
       searchPage = 1;
     });
   }
+}
+
+class CharactersResponseStorage {
+  static final CharactersResponseStorage _instance =
+      CharactersResponseStorage._internal();
+
+  factory CharactersResponseStorage() {
+    return _instance;
+  }
+
+  CharactersResponse? _charactersResponse;
+
+  CharactersResponse? get charactersResponse => _charactersResponse;
+
+  set characterResponse(CharactersResponse value) {
+    _charactersResponse = value;
+  }
+
+  CharactersResponseStorage._internal();
 }

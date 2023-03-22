@@ -6,30 +6,27 @@ abstract class CharacterState extends Equatable {
   final int? count;
   final String? next;
 
-  const CharacterState(this.characters, this.count ,this.next);
+  const CharacterState(this.characters, this.count, this.next);
 }
 
 class InitialState extends CharacterState {
   const InitialState(super.characters, super.count, super.next);
 
   @override
-  List<Object?> get props => [characters, count,next];
+  List<Object?> get props => [characters, count, next];
 }
 
 class LoadingCharactersState extends CharacterState {
-  const LoadingCharactersState(
-    super.characters,
-    super.count,
-    super.next
-  );
+  const LoadingCharactersState(super.characters, super.count, super.next);
 
   @override
-  List<Object?> get props => [characters, count,next];
+  List<Object?> get props => [characters, count, next];
 }
 
 class CharactersLoadedState extends CharacterState {
-  const CharactersLoadedState({required characters, required count , required next})
-      : super(characters, count,next );
+  const CharactersLoadedState(
+      {required characters, required count, required next})
+      : super(characters, count, next);
 
   @override
   List<Object?> get props => [characters, count];
@@ -37,7 +34,7 @@ class CharactersLoadedState extends CharacterState {
 
 class CharactersErrorState extends CharacterState {
   final String errorMessage;
-  const CharactersErrorState(this.errorMessage) : super(null, null ,null);
+  const CharactersErrorState(this.errorMessage) : super(null, null, null);
 
   @override
   List<Object?> get props => [errorMessage];
