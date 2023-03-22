@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +91,7 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
             next: charactersResponse.nextPage,
           ));
         } else if (charactersResponse == null) {
-          emit(const CharactersErrorState('opps'));
+          emit(const CharactersErrorState('Character Not Found'));
         }
       },
     );
@@ -144,6 +143,8 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
       }
     });
 
+    on<GoBackToInitStateEvent>(
+        (event, emit) => emit(const InitialState(null, null, null)));
     on<ResetSearchPage>((event, emit) {
       page = 1;
       searchPage = 1;

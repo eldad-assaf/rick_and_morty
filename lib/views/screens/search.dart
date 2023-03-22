@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty/state/bloc/character_bloc.dart';
 import 'dart:async';
-
 import 'package:rick_and_morty/views/screens/main_screen.dart';
-
-import '../animations/search_animation_view.dart';
 import '../animations/search_with_text_animation_view.dart';
 
 class SearchPage extends StatefulWidget {
@@ -26,6 +23,9 @@ class _SearchPageState extends State<SearchPage> {
         BlocProvider.of<CharacterBloc>(context)
             .add(SearchCharacterEvent(name: newText.trimLeft().trimRight()));
       }
+      if (newText.trim().isEmpty) {
+        BlocProvider.of<CharacterBloc>(context).add(GoBackToInitStateEvent());
+      }
     });
   }
 
@@ -40,7 +40,6 @@ class _SearchPageState extends State<SearchPage> {
     return WillPopScope(
       onWillPop: () => Future(() {
         BlocProvider.of<CharacterBloc>(context).add(ResetSearchPage());
-
         BlocProvider.of<CharacterBloc>(context).add(LoadCharactersEvent());
         return true;
       }),
@@ -50,23 +49,23 @@ class _SearchPageState extends State<SearchPage> {
         ),
         body: Column(
           children: [
-            TextField(
-              decoration: const InputDecoration(
-                hintText: 'Search',
-                prefixIcon: Icon(Icons.search),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration: const InputDecoration(
+                  hintText: 'Search',
+                  prefixIcon: Icon(Icons.search),
+                ),
+                onChanged: _onTextChanged,
               ),
-              onChanged: _onTextChanged,
             ),
             Expanded(
               child: BlocBuilder<CharacterBloc, CharacterState>(
                 builder: (context, state) {
                   if (state is InitialState) {
-                    return const SliverToBoxAdapter(
-                      child: SearchWithTextAnimationView(
-                        text: 'search!',
-                      ),
+                    return const SearchWithTextAnimationView(
+                      text: 'Type Character Name!',
                     );
-                    ;
                   } else if (state is LoadingCharactersState) {
                     return const Center(
                       child: Text('loading state!'),
@@ -122,8 +121,8 @@ class _SearchPageState extends State<SearchPage> {
                       },
                     );
                   } else if (state is CharactersErrorState) {
-                    return const Center(
-                      child: Text('error state!'),
+                    return Center(
+                      child: Text('Opps! ${state.errorMessage}'),
                     );
                   } else {
                     return const Center(

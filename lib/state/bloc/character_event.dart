@@ -21,6 +21,8 @@ class SearchCharacterEvent extends CharacterEvent {
 
 class ResetSearchPage extends CharacterEvent {}
 
+class GoBackToInitStateEvent extends CharacterEvent{}
+
 class SaveCurrentCharacterResponse extends CharacterEvent {}
 
 class ScrollToLastPosition extends CharacterEvent{}
