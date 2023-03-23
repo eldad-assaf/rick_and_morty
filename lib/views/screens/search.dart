@@ -84,10 +84,10 @@ class _SearchPageState extends State<SearchPage> {
                         childAspectRatio: 0.75,
                       ),
                       itemCount: isLoadingMore
-                          ? state.characters!.length + 1
-                          : state.characters!.length,
+                          ? state.charactersResponse!.characters.length + 1
+                          : state.charactersResponse!.characters.length,
                       itemBuilder: (BuildContext context, int index) {
-                        if (index == state.count) {
+                        if (index == state.charactersResponse!.count) {
                           return const Card(
                             child: Center(
                               child: Text(
@@ -97,7 +97,8 @@ class _SearchPageState extends State<SearchPage> {
                               ),
                             ),
                           );
-                        } else if (index >= state.characters!.length) {
+                        } else if (index >=
+                            state.charactersResponse!.characters.length) {
                           return Card(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -116,7 +117,8 @@ class _SearchPageState extends State<SearchPage> {
                           );
                         } else {
                           return CharacterItemWidget(
-                            character: state.characters![index],
+                            character:
+                                state.charactersResponse!.characters[index],
                           );
                         }
                       },

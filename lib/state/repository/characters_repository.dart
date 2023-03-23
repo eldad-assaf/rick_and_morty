@@ -67,11 +67,12 @@ class CharactersResponse {
   final String? nextPageUrl;
   final int? nextPageNumber;
 
-  CharactersResponse(
-      {required this.characters,
-      required this.count,
-      required this.nextPageUrl,
-      required this.nextPageNumber});
+  CharactersResponse({
+    required this.characters,
+    required this.count,
+    required this.nextPageUrl,
+    required this.nextPageNumber,
+  });
 
   factory CharactersResponse.fromJson(Map<String, dynamic> json) {
     final characters = (json['results'] as List<dynamic>)
