@@ -10,15 +10,14 @@ part 'all_characters_state.dart';
 class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
   final CharacterRepository _characterRepository;
   int page = 1;
-  // int searchPage = 1;
   bool isLoadingMore = false;
   bool hasReachedLastPage = false;
   ScrollPosition? lastScrollPosition;
   final ScrollController allCharactersScrollController = ScrollController();
-  final ScrollController searchResultsScrollController = ScrollController();
+  // final ScrollController searchResultsScrollController = ScrollController();
 
   AllCharactersBloc(this._characterRepository)
-      : super(const InitialState(null, null, null, null)) {
+      : super(const InitialState(null)) {
     allCharactersScrollController.addListener(() {
       lastScrollPosition = allCharactersScrollController.position;
       add(LoadMoreCharactersEvent());
@@ -27,13 +26,9 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
     on<SaveCurrentCharacterResponse>((event, emit) {
       final charactersResponseStorage = CharactersResponseStorage();
 
-      final CharactersResponse charactersResponse = CharactersResponse(
-          characters: state.characters!,
-          count: state.count!,
-          nextPageUrl: state.nextPageUrl,
-          nextPageNumber: state.nextPageNumber);
+      // final CharactersResponse charactersResponse = state.charactersResponse!; //no need?
 
-      charactersResponseStorage.characterResponse = charactersResponse;
+      charactersResponseStorage.characterResponse = state.charactersResponse!;
     });
 
     on<ScrollToLastPosition>((event, emit) {
@@ -51,114 +46,54 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
 
       if (charactersResponseFromStorage != null) {
         emit(CharactersLoadedState(
-            characters: charactersResponseFromStorage.characters,
-            count: charactersResponseFromStorage.count,
-            nextPageUrl: charactersResponseFromStorage.nextPageUrl,
-            nextPageNumber: charactersResponseFromStorage.nextPageNumber));
+            charactersResponse: charactersResponseFromStorage));
 
         return;
       }
-      emit(const LoadingCharactersState(null, null, null, null));
+      emit(const LoadingCharactersState(null));
       final CharactersResponse? charactersResponse =
           await _characterRepository.getCharacters(page);
       if (charactersResponse != null) {
-        emit(CharactersLoadedState(
-            characters: charactersResponse.characters,
-            count: charactersResponse.count,
-            nextPageUrl: charactersResponse.nextPageUrl,
-            nextPageNumber: charactersResponse.nextPageNumber));
+        emit(CharactersLoadedState(charactersResponse: charactersResponse));
       } else if (charactersResponse == null) {
         emit(const CharactersErrorState('opps'));
       }
     });
 
-    // on<SearchCharacterEvent>(
-    //   (event, emit) async {
-    //     log('event name : ${event.name}');
-    //     searchResultsScrollController.addListener(
-    //       () {
-    //         log('Listener call!');
-    //         add(LoadMoreSearchResultsEvent(name: event.name));
-    //       },
-    //     );
-    //     emit(const LoadingCharactersState(null, null, null, null));
-    //     final CharactersResponse? charactersResponse =
-    //         await _characterRepository.searchCharacters(
-    //             name: event.name, page: searchPage);
-    //     if (charactersResponse != null) {
-    //       log('emmiting CharactersLoadedState from SearchCharacterEvent');
-    //       emit(CharactersLoadedState(
-    //           characters: charactersResponse.characters,
-    //           count: charactersResponse.count,
-    //           nextPageUrl: charactersResponse.nextPageUrl,
-    //           nextPageNumber: charactersResponse.nextPageNumber));
-    //     } else if (charactersResponse == null) {
-    //       emit(const CharactersErrorState('Character Not Found'));
-    //     }
-    //   },
-    // );
-
     on<LoadMoreCharactersEvent>((event, emit) async {
       if (allCharactersScrollController.position.pixels ==
-              allCharactersScrollController.position.maxScrollExtent &&
-          state.nextPageUrl != null) {
+          allCharactersScrollController.position.maxScrollExtent) {
+        // log('page : $page , stateNumber = ${state.charactersResponse!.nextPageNumber}');
+        // log('nextUrl = ${state.charactersResponse!.nextPageUrl}');
+        // log('count = ${state.charactersResponse!.count}');
+
+        if (state.charactersResponse!.nextPageNumber == null) {
+          return;
+        }
         isLoadingMore = true;
         page++;
         final CharactersResponse? charactersResponse =
             await _characterRepository.getCharacters(page);
         if (charactersResponse != null) {
+          List<Character> combinedCharactersLoadedUntilNow = [
+            ...state.charactersResponse!.characters,
+            ...charactersResponse.characters
+          ];
+
+          final newResponesObjectWithUpdatedList = charactersResponse.copyWith(
+              characters: combinedCharactersLoadedUntilNow);
+
           emit(CharactersLoadedState(
-              characters: [
-                ...state.characters!,
-                ...charactersResponse.characters
-              ],
-              count: state.count,
-              nextPageUrl: charactersResponse.nextPageUrl,
-              nextPageNumber: charactersResponse.nextPageNumber));
+              charactersResponse: newResponesObjectWithUpdatedList));
         } else if (charactersResponse == null) {
           emit(const CharactersErrorState('opps'));
         }
       }
     });
 
-    // on<LoadMoreSearchResultsEvent>((event, emit) async {
-    //   if (searchResultsScrollController.position.pixels ==
-    //           searchResultsScrollController.position.maxScrollExtent &&
-    //       state.nextPageUrl != null &&
-    //       state.nextPageNumber != null) {
-    //     isLoadingMore = true;
-    //     //searchPage++;
-    //     //makes isuues!
-    //     //try to replace with next page grom the api response
-
-    //     log('next : ${state.nextPageNumber}');
-    //     log('next : ${state.nextPageUrl}');
-
-    //     final CharactersResponse? charactersResponse =
-    //         await _characterRepository.searchCharacters(
-    //             name: event.name, page: state.nextPageNumber!);
-    //     log('charactersResponse from LoadMoreSearchResultsEvent ${charactersResponse} ');
-    //     if (charactersResponse != null) {
-    //       emit(CharactersLoadedState(
-    //           characters: [
-    //             ...state.characters!,
-    //             ...charactersResponse.characters
-    //           ],
-    //           count: state.count,
-    //           nextPageUrl: charactersResponse.nextPageUrl,
-    //           nextPageNumber: charactersResponse.nextPageNumber));
-    //     } else if (charactersResponse == null) {
-    //       emit(const CharactersErrorState('opps'));
-    //     }
-    //   }
-    // });
-
-    // on<GoBackToInitStateEvent>(
-    //     (event, emit) => emit(const InitialState(null, null, null, null)));
-
     on<ResetSearchPage>((event, emit) {
       page = 1;
-    //  searchPage = 1;
+      //  searchPage = 1;
     });
   }
 }

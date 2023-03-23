@@ -67,11 +67,12 @@ class CharactersResponse {
   final String? nextPageUrl;
   final int? nextPageNumber;
 
-  CharactersResponse(
-      {required this.characters,
-      required this.count,
-      required this.nextPageUrl,
-      required this.nextPageNumber});
+  CharactersResponse({
+    required this.characters,
+    required this.count,
+    required this.nextPageUrl,
+    required this.nextPageNumber,
+  });
 
   factory CharactersResponse.fromJson(Map<String, dynamic> json) {
     final characters = (json['results'] as List<dynamic>)
@@ -89,6 +90,17 @@ class CharactersResponse {
       count: count,
       nextPageUrl: nextPageUrl,
       nextPageNumber: nextPageNumber,
+    );
+  }
+
+  CharactersResponse copyWith({
+    List<Character>? characters,
+  }) {
+    return CharactersResponse(
+      characters: characters ?? this.characters,
+      count: count,
+      nextPageUrl: nextPageUrl ?? nextPageUrl,
+      nextPageNumber: nextPageNumber ?? nextPageNumber,
     );
   }
 }
