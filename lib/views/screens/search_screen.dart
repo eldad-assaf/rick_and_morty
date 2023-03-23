@@ -25,39 +25,42 @@ class _SearchScreenState extends State<SearchScreen> {
               return true;
             },
           ),
-          child: Scaffold(
-            appBar: AppBar(
-              title: const Text('Search'),
-            ),
-            body: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: context.read<SearchBloc>().searchTextController,
-                    decoration: const InputDecoration(
-                      hintText: 'put example',
-                      prefixIcon: Icon(Icons.search),
+          child: SafeArea(
+            child: Scaffold(
+              appBar: AppBar(
+                title: const Text('Search'),
+              ),
+              body: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller:
+                          context.read<SearchBloc>().searchTextController,
+                      decoration: const InputDecoration(
+                        hintText: 'put example',
+                        prefixIcon: Icon(Icons.search),
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
-                    child: state is InitialSearchState
-                        ? const SearchWithTextAnimationView(
-                            text: 'Type Character Name!',
-                          )
-                        : state is ResultsLoadedState
-                            ? CharactersListGridView(
-                                charactersResponse: state.charactersResponse!,
-                                isLoadingMore: context
-                                    .read<SearchBloc>()
-                                    .isLoadingMoreResults,
-                                scrollController: context
-                                    .read<SearchBloc>()
-                                    .searchResultsScrollController,
-                              )
-                            : Container()),
-              ],
+                  Expanded(
+                      child: state is InitialSearchState
+                          ? const SearchWithTextAnimationView(
+                              text: 'Type Character Name!',
+                            )
+                          : state is ResultsLoadedState
+                              ? CharactersListGridView(
+                                  charactersResponse: state.charactersResponse!,
+                                  isLoadingMore: context
+                                      .read<SearchBloc>()
+                                      .isLoadingMoreResults,
+                                  scrollController: context
+                                      .read<SearchBloc>()
+                                      .searchResultsScrollController,
+                                )
+                              : Container()),
+                ],
+              ),
             ),
           ),
         );

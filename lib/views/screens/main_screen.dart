@@ -9,44 +9,46 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              context
-                  .read<AllCharactersBloc>()
-                  .add(SaveCurrentCharacterResponse());
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const SearchScreen(),
-              ));
-            },
-          )
-        ],
-      ),
-      body: BlocBuilder<AllCharactersBloc, AllCharacterState>(
-        builder: (context, state) {
-          if (state is LoadingCharactersState) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is CharactersErrorState) {
-            return Center(
-              child: Text(state.errorMessage),
-            );
-          }
-          if (state is CharactersLoadedState) {
-            context.read<AllCharactersBloc>().add(ScrollToLastPosition());
-            return CharactersListGridView(
-              charactersResponse: state.charactersResponse!,
-              isLoadingMore: context.read<AllCharactersBloc>().isLoadingMore,
-              scrollController: context
-                  .read<AllCharactersBloc>()
-                  .allCharactersScrollController,
-            );
-          }
-          return Container();
-        },
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                context
+                    .read<AllCharactersBloc>()
+                    .add(SaveCurrentCharacterResponse());
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const SearchScreen(),
+                ));
+              },
+            )
+          ],
+        ),
+        body: BlocBuilder<AllCharactersBloc, AllCharacterState>(
+          builder: (context, state) {
+            if (state is LoadingCharactersState) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state is CharactersErrorState) {
+              return Center(
+                child: Text(state.errorMessage),
+              );
+            }
+            if (state is CharactersLoadedState) {
+              context.read<AllCharactersBloc>().add(ScrollToLastPosition());
+              return CharactersListGridView(
+                charactersResponse: state.charactersResponse!,
+                isLoadingMore: context.read<AllCharactersBloc>().isLoadingMore,
+                scrollController: context
+                    .read<AllCharactersBloc>()
+                    .allCharactersScrollController,
+              );
+            }
+            return Container();
+          },
+        ),
       ),
     );
   }
