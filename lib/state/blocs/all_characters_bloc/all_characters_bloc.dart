@@ -10,12 +10,11 @@ part 'all_characters_state.dart';
 class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
   final CharacterRepository _characterRepository;
   int page = 1;
-  // int searchPage = 1;
   bool isLoadingMore = false;
   bool hasReachedLastPage = false;
   ScrollPosition? lastScrollPosition;
   final ScrollController allCharactersScrollController = ScrollController();
-  final ScrollController searchResultsScrollController = ScrollController();
+  // final ScrollController searchResultsScrollController = ScrollController();
 
   AllCharactersBloc(this._characterRepository)
       : super(const InitialState(null)) {
