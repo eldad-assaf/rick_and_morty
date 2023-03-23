@@ -64,8 +64,6 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
     on<LoadMoreCharactersEvent>((event, emit) async {
       if (allCharactersScrollController.position.pixels ==
           allCharactersScrollController.position.maxScrollExtent) {
-     
-
         // log('page : $page , stateNumber = ${state.charactersResponse!.nextPageNumber}');
         // log('nextUrl = ${state.charactersResponse!.nextPageUrl}');
         // log('count = ${state.charactersResponse!.count}');
@@ -78,14 +76,14 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
         final CharactersResponse? charactersResponse =
             await _characterRepository.getCharacters(page);
         if (charactersResponse != null) {
-          List<Character> combinedCharactersLoadedUntilNow =
-              state.charactersResponse!.characters +
-                  charactersResponse.characters;
-          final newResponesObjectWithUpdatedList = CharactersResponse(
-              characters: combinedCharactersLoadedUntilNow,
-              count: charactersResponse.count,
-              nextPageUrl: charactersResponse.nextPageUrl,
-              nextPageNumber: charactersResponse.nextPageNumber);
+          List<Character> combinedCharactersLoadedUntilNow = [
+            ...state.charactersResponse!.characters,
+            ...charactersResponse.characters
+          ];
+
+          final newResponesObjectWithUpdatedList = charactersResponse.copyWith(
+              characters: combinedCharactersLoadedUntilNow);
+
           emit(CharactersLoadedState(
               charactersResponse: newResponesObjectWithUpdatedList));
         } else if (charactersResponse == null) {

@@ -92,6 +92,17 @@ class CharactersResponse {
       nextPageNumber: nextPageNumber,
     );
   }
+
+  CharactersResponse copyWith({
+    List<Character>? characters,
+  }) {
+    return CharactersResponse(
+      characters: characters ?? this.characters,
+      count: count,
+      nextPageUrl: nextPageUrl ?? nextPageUrl,
+      nextPageNumber: nextPageNumber ?? nextPageNumber,
+    );
+  }
 }
 
 extension UrlExtension on String {
