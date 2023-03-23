@@ -6,7 +6,6 @@ import 'package:rick_and_morty/state/blocs/search_bloc/search_bloc.dart';
 import 'package:rick_and_morty/state/repository/characters_repository.dart';
 import 'package:rick_and_morty/views/screens/main_screen.dart';
 
-//https://www.youtube.com/watch?v=hc7zZTEqFyA
 void main() {
   runApp(const RickAndMortyApp());
 }
