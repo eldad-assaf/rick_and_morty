@@ -12,3 +12,9 @@ class SearchCharacterEvent extends SearchEvent {
   final String name;
   SearchCharacterEvent({required this.name});
 }
+
+class LoadMoreSearchResults extends SearchEvent{
+  
+}
+
+class ResetSearchResultsEvent extends SearchEvent {}

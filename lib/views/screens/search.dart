@@ -241,6 +241,7 @@ class _SearchPageState extends State<SearchPage> {
                                       1
                                   : state.charactersResponse!.characters.length,
                               itemBuilder: (BuildContext context, int index) {
+                                log('index  : $index , count  : ${state.charactersResponse!.count}');
                                 if (index == state.charactersResponse!.count) {
                                   return const Card(
                                     child: Center(

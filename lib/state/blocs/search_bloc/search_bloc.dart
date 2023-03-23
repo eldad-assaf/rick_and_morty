@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rick_and_morty/state/repository/characters_repository.dart';
+
+import '../../models/character_model.dart';
 part 'search_event.dart';
 part 'search_state.dart';
 
@@ -17,9 +19,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   SearchBloc(this._characterRepository)
       : super(const InitialSearchState(null)) {
-    searchResultsScrollController.addListener(() {});
+    searchResultsScrollController.addListener(() {
+      add(LoadMoreSearchResults());
+    });
     searchTextController.addListener(() {
       //fix the issue that closing the keyboard
+      if (searchTextController.text.trim().isEmpty) {
+        add(ResetSearchResultsEvent());
+      }
 
       log('temoValue: $tempValue , controllerValue : ${searchTextController.text}');
       if (searchTextController.text.isNotEmpty) {
@@ -42,6 +49,41 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       } else if (charactersResponse == null) {
         emit(const SearchErrorState('opps'));
       }
+    });
+
+    on<LoadMoreSearchResults>((event, emit) async {
+      if (searchResultsScrollController.position.pixels ==
+          searchResultsScrollController.position.maxScrollExtent) {
+        if (state.charactersResponse!.nextPageNumber == null) {
+          return;
+        }
+        isLoadingMoreResults = true;
+        page++;
+        final CharactersResponse? charactersResponse =
+            await _characterRepository.searchCharacters(
+                name: searchTextController.text.trim(), page: page);
+        if (charactersResponse != null) {
+          List<Character> combinedCharactersLoadedUntilNow = [
+            ...state.charactersResponse!.characters,
+            ...charactersResponse.characters
+          ];
+
+          final newResponesObjectWithUpdatedList = charactersResponse.copyWith(
+              characters: combinedCharactersLoadedUntilNow);
+
+          // emit(CharactersLoadedState(
+          //     charactersResponse: newResponesObjectWithUpdatedList));
+          emit(ResultsLoadedState(
+              charactersResponse: newResponesObjectWithUpdatedList));
+        } else if (charactersResponse == null) {
+          //    emit(const CharactersErrorState('opps'));
+          emit(const SearchErrorState('opps'));
+        }
+      }
+    });
+
+    on<ResetSearchResultsEvent>((event, emit) async {
+      emit(const InitialSearchState(null));
     });
   }
 }
