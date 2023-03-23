@@ -177,112 +177,113 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  // final _debouncer =
-  //     Debouncer(const Duration(seconds: 2)); // <-- set the delay time here
-
-  // void _onTextChanged(String newText) {
-  //   _debouncer.run(() {
-  //     if (newText.trim().isNotEmpty) {
-
-  //     }
-  //     if (newText.trim().isEmpty) {
-  //       log('WTF');
-  //       // BlocProvider.of<CharacterBloc>(context).add(GoBackToInitStateEvent());
-  //     }
-  //   });
-  // }
-
   @override
-  void dispose() {
-    //_debouncer.cancel();
-    super.dispose();
+  void initState() {
+    context.read<SearchBloc>().page = 1;
+    context.read<SearchBloc>().tempValue = '';
+    context.read<SearchBloc>().isLoadingMoreResults = false;
+    context.read<SearchBloc>().searchTextController.clear();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Search'),
+        return WillPopScope(
+          onWillPop: () => Future(
+            () {
+              BlocProvider.of<SearchBloc>(context)
+                  .add(ResetSearchResultsEvent());
+
+              return true;
+            },
           ),
-          body: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: context.read<SearchBloc>().searchTextController,
-                  decoration: const InputDecoration(
-                    hintText: 'put example',
-                    prefixIcon: Icon(Icons.search),
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text('Search'),
+            ),
+            body: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: context.read<SearchBloc>().searchTextController,
+                    decoration: const InputDecoration(
+                      hintText: 'put example',
+                      prefixIcon: Icon(Icons.search),
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                  child: state is InitialSearchState
-                      ? const SearchWithTextAnimationView(
-                          text: 'Type Character Name!',
-                        )
-                      : state is ResultsLoadedState
-                          ? GridView.builder(
-                              controller: context
-                                  .read<SearchBloc>()
-                                  .searchResultsScrollController,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 0.75,
-                              ),
-                              itemCount: context
-                                      .read<SearchBloc>()
-                                      .isLoadingMoreResults
-                                  ? state.charactersResponse!.characters
-                                          .length +
-                                      1
-                                  : state.charactersResponse!.characters.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                log('index  : $index , count  : ${state.charactersResponse!.count}');
-                                if (index == state.charactersResponse!.count) {
-                                  return const Card(
-                                    child: Center(
-                                      child: Text(
-                                        'The end',
-                                        style: TextStyle(
-                                            color: Colors.blue, fontSize: 24),
-                                      ),
-                                    ),
-                                  );
-                                } else if (index >=
-                                    state.charactersResponse!.characters
-                                        .length) {
-                                  return Card(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: const [
-                                        CircularProgressIndicator(
-                                            color: Colors.pink),
-                                        SizedBox(
-                                          height: 12,
-                                        ),
-                                        Text(
-                                          'loading...',
+                Expanded(
+                    child: state is InitialSearchState
+                        ? const SearchWithTextAnimationView(
+                            text: 'Type Character Name!',
+                          )
+                        : state is ResultsLoadedState
+                            ? GridView.builder(
+                                controller: context
+                                    .read<SearchBloc>()
+                                    .searchResultsScrollController,
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 0.75,
+                                ),
+                                itemCount: context
+                                        .read<SearchBloc>()
+                                        .isLoadingMoreResults
+                                    ? state.charactersResponse!.characters
+                                            .length +
+                                        1
+                                    : state
+                                        .charactersResponse!.characters.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  log('index  : $index , count  : ${state.charactersResponse!.count}');
+                                  if (index ==
+                                      state.charactersResponse!.count) {
+                                    return const Card(
+                                      child: Center(
+                                        child: Text(
+                                          'The end',
                                           style: TextStyle(
                                               color: Colors.blue, fontSize: 24),
-                                        )
-                                      ],
-                                    ),
-                                  );
-                                } else {
-                                  return CharacterItemWidget(
-                                    character: state
-                                        .charactersResponse!.characters[index],
-                                  );
-                                }
-                              },
-                            )
-                          : Container()),
-            ],
+                                        ),
+                                      ),
+                                    );
+                                  } else if (index >=
+                                      state.charactersResponse!.characters
+                                          .length) {
+                                    return Card(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: const [
+                                          CircularProgressIndicator(
+                                              color: Colors.pink),
+                                          SizedBox(
+                                            height: 12,
+                                          ),
+                                          Text(
+                                            'loading...',
+                                            style: TextStyle(
+                                                color: Colors.blue,
+                                                fontSize: 24),
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  } else {
+                                    return CharacterItemWidget(
+                                      character: state.charactersResponse!
+                                          .characters[index],
+                                    );
+                                  }
+                                },
+                              )
+                            : Container()),
+              ],
+            ),
           ),
         );
       },

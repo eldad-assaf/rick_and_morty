@@ -17,6 +17,12 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   bool isLoadingMoreResults = false;
   String tempValue = '';
 
+  void resetValues() {
+    int page = 1;
+    bool isLoadingMoreResults = false;
+    String tempValue = '';
+  }
+
   SearchBloc(this._characterRepository)
       : super(const InitialSearchState(null)) {
     searchResultsScrollController.addListener(() {
