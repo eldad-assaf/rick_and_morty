@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rick_and_morty/state/bloc/character_bloc.dart';
 import 'dart:async';
 import 'package:rick_and_morty/views/screens/main_screen.dart';
+import '../../state/blocs/all_characters_bloc/all_characters_bloc.dart';
 import '../animations/search_with_text_animation_view.dart';
 
 class SearchPage extends StatefulWidget {
@@ -22,11 +22,7 @@ class _SearchPageState extends State<SearchPage> {
     log('_onTextChanged');
     log(newText);
     _debouncer.run(() {
-      if (newText.trim().isNotEmpty) {
-        // BlocProvider.of<CharacterBloc>(context).add(ResetSearchPage());
-        BlocProvider.of<CharacterBloc>(context)
-            .add(SearchCharacterEvent(name: newText.trim()));
-      }
+      if (newText.trim().isNotEmpty) {}
       if (newText.trim().isEmpty) {
         log('WTF');
         // BlocProvider.of<CharacterBloc>(context).add(GoBackToInitStateEvent());
@@ -44,8 +40,8 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => Future(() {
-        BlocProvider.of<CharacterBloc>(context).add(ResetSearchPage());
-        BlocProvider.of<CharacterBloc>(context).add(LoadCharactersEvent());
+        // BlocProvider.of<CharacterBloc>(context).add(ResetSearchPage());
+        // BlocProvider.of<CharacterBloc>(context).add(LoadCharactersEvent());
         return true;
       }),
       child: Scaffold(
@@ -65,7 +61,7 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
             Expanded(
-              child: BlocBuilder<CharacterBloc, CharacterState>(
+              child: BlocBuilder<AllCharactersBloc, AllCharacterState>(
                 builder: (context, state) {
                   if (state is InitialState) {
                     return const SearchWithTextAnimationView(
@@ -77,10 +73,10 @@ class _SearchPageState extends State<SearchPage> {
                     );
                   } else if (state is CharactersLoadedState) {
                     final isLoadingMore =
-                        context.read<CharacterBloc>().isLoadingMore;
+                        context.read<AllCharactersBloc>().isLoadingMore;
                     return GridView.builder(
                       controller: context
-                          .read<CharacterBloc>()
+                          .read<AllCharactersBloc>()
                           .searchResultsScrollController,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(

@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rick_and_morty/state/bloc/character_bloc.dart';
 import 'package:rick_and_morty/views/screens/search.dart';
 
+import '../../state/blocs/all_characters_bloc/all_characters_bloc.dart';
 import '../../state/models/character_model.dart';
 
 class MainScreen extends StatelessWidget {
@@ -17,8 +17,9 @@ class MainScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              context.read<CharacterBloc>().add(SaveCurrentCharacterResponse());
-              context.read<CharacterBloc>().add(LoadSearchPageEvent());
+              context
+                  .read<AllCharactersBloc>()
+                  .add(SaveCurrentCharacterResponse());
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => const SearchPage(),
               ));
@@ -32,7 +33,7 @@ class MainScreen extends StatelessWidget {
 }
 
 Widget blocBody(BuildContext context) {
-  return BlocBuilder<CharacterBloc, CharacterState>(
+  return BlocBuilder<AllCharactersBloc, AllCharacterState>(
     builder: (context, state) {
       if (state is LoadingCharactersState) {
         return const Center(child: CircularProgressIndicator());
@@ -43,12 +44,12 @@ Widget blocBody(BuildContext context) {
         );
       }
       if (state is CharactersLoadedState) {
-        final isLoadingMore = context.read<CharacterBloc>().isLoadingMore;
-        context.read<CharacterBloc>().add(ScrollToLastPosition());
+        final isLoadingMore = context.read<AllCharactersBloc>().isLoadingMore;
+        context.read<AllCharactersBloc>().add(ScrollToLastPosition());
 
         return GridView.builder(
           controller:
-              context.read<CharacterBloc>().allCharactersScrollController,
+              context.read<AllCharactersBloc>().allCharactersScrollController,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 0.75,

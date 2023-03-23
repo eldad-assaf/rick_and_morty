@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rick_and_morty/state/bloc/character_bloc.dart';
+import 'package:rick_and_morty/state/blocs/all_characters_bloc/all_characters_bloc.dart';
 import 'package:rick_and_morty/state/repository/characters_repository.dart';
 import 'package:rick_and_morty/views/screens/main_screen.dart';
 
@@ -20,9 +20,10 @@ class RickAndMortyApp extends StatelessWidget {
       create: (context) => CharacterRepository(dio: Dio()),
       child: MultiBlocProvider(
           providers: [
-            BlocProvider<CharacterBloc>(
-              create: (context) => CharacterBloc(RepositoryProvider.of(context))
-                ..add(LoadCharactersEvent()),
+            BlocProvider<AllCharactersBloc>(
+              create: (context) =>
+                  AllCharactersBloc(RepositoryProvider.of(context))
+                    ..add(LoadCharactersEvent()),
             ),
           ],
           child: MaterialApp(

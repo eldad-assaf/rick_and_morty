@@ -1,17 +1,17 @@
-part of 'character_bloc.dart';
+part of 'all_characters_bloc.dart';
 
 @immutable
-abstract class CharacterState extends Equatable {
+abstract class AllCharacterState extends Equatable {
   final List<Character>? characters;
   final int? count;
   final String? nextPageUrl;
   final int? nextPageNumber;
 
-  const CharacterState(
+  const AllCharacterState(
       this.characters, this.count, this.nextPageUrl, this.nextPageNumber);
 }
 
-class InitialState extends CharacterState {
+class InitialState extends AllCharacterState {
   const InitialState(
       super.characters, super.count, super.next, super.nextPageNumber);
 
@@ -19,7 +19,7 @@ class InitialState extends CharacterState {
   List<Object?> get props => [characters, count, nextPageUrl];
 }
 
-class LoadingCharactersState extends CharacterState {
+class LoadingCharactersState extends AllCharacterState {
   const LoadingCharactersState(
       super.characters, super.count, super.next, super.nextPageNumber);
 
@@ -27,7 +27,7 @@ class LoadingCharactersState extends CharacterState {
   List<Object?> get props => [characters, count, nextPageUrl];
 }
 
-class CharactersLoadedState extends CharacterState {
+class CharactersLoadedState extends AllCharacterState {
   const CharactersLoadedState(
       {required characters,
       required count,
@@ -39,7 +39,7 @@ class CharactersLoadedState extends CharacterState {
   List<Object?> get props => [characters, count];
 }
 
-class CharactersErrorState extends CharacterState {
+class CharactersErrorState extends AllCharacterState {
   final String errorMessage;
   const CharactersErrorState(this.errorMessage) : super(null, null, null ,null);
 
