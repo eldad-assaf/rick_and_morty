@@ -63,10 +63,6 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
     on<LoadMoreCharactersEvent>((event, emit) async {
       if (allCharactersScrollController.position.pixels ==
           allCharactersScrollController.position.maxScrollExtent) {
-        // log('page : $page , stateNumber = ${state.charactersResponse!.nextPageNumber}');
-        // log('nextUrl = ${state.charactersResponse!.nextPageUrl}');
-        // log('count = ${state.charactersResponse!.count}');
-
         if (state.charactersResponse!.nextPageNumber == null) {
           return;
         }

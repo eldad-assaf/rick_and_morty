@@ -25,35 +25,29 @@ class MainScreen extends StatelessWidget {
           )
         ],
       ),
-      body: blocBody(context),
+      body: BlocBuilder<AllCharactersBloc, AllCharacterState>(
+        builder: (context, state) {
+          if (state is LoadingCharactersState) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is CharactersErrorState) {
+            return Center(
+              child: Text(state.errorMessage),
+            );
+          }
+          if (state is CharactersLoadedState) {
+            context.read<AllCharactersBloc>().add(ScrollToLastPosition());
+            return CharactersListGridView(
+              charactersResponse: state.charactersResponse!,
+              isLoadingMore: context.read<AllCharactersBloc>().isLoadingMore,
+              scrollController: context
+                  .read<AllCharactersBloc>()
+                  .allCharactersScrollController,
+            );
+          }
+          return Container();
+        },
+      ),
     );
   }
 }
-
-Widget blocBody(BuildContext context) {
-  return BlocBuilder<AllCharactersBloc, AllCharacterState>(
-    builder: (context, state) {
-      if (state is LoadingCharactersState) {
-        return const Center(child: CircularProgressIndicator());
-      }
-      if (state is CharactersErrorState) {
-        return Center(
-          child: Text(state.errorMessage),
-        );
-      }
-      if (state is CharactersLoadedState) {
-        final isLoadingMore = context.read<AllCharactersBloc>().isLoadingMore;
-        context.read<AllCharactersBloc>().add(ScrollToLastPosition());
-        return CharactersListGridView(
-          charactersResponse: state.charactersResponse!,
-          isLoadingMore: isLoadingMore,
-          scrollController:
-              context.read<AllCharactersBloc>().allCharactersScrollController,
-        );
-      }
-      return Container();
-    },
-  );
-}
-
-
