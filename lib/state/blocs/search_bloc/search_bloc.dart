@@ -31,7 +31,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     searchTextController.addListener(() {
       //fix the issue that closing the keyboard
       if (searchTextController.text.trim().isEmpty) {
-        add(ResetSearchResultsEvent());
+        add(LeaveSearchPage());
       }
 
       log('temoValue: $tempValue , controllerValue : ${searchTextController.text}');
@@ -88,8 +88,16 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       }
     });
 
-    on<ResetSearchResultsEvent>((event, emit) async {
+    on<LeaveSearchPage>((event, emit) async {
       emit(const InitialSearchState(null));
+      tempValue = '';
+      page = 1;
+      isLoadingMoreResults = false;
+      searchTextController.clear();
     });
   }
 }
+    // context.read<SearchBloc>().page = 1;
+    // context.read<SearchBloc>().tempValue = '';
+    // context.read<SearchBloc>().isLoadingMoreResults = false;
+    // context.read<SearchBloc>().searchTextController.clear();

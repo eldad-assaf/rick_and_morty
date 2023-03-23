@@ -17,4 +17,4 @@ class LoadMoreSearchResults extends SearchEvent{
   
 }
 
-class ResetSearchResultsEvent extends SearchEvent {}
+class LeaveSearchPage extends SearchEvent {}

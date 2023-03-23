@@ -166,7 +166,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty/state/blocs/search_bloc/search_bloc.dart';
 import 'dart:async';
 import 'package:rick_and_morty/views/screens/main_screen.dart';
-import '../../state/blocs/all_characters_bloc/all_characters_bloc.dart';
 import '../animations/search_with_text_animation_view.dart';
 
 class SearchPage extends StatefulWidget {
@@ -179,10 +178,10 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
-    context.read<SearchBloc>().page = 1;
-    context.read<SearchBloc>().tempValue = '';
-    context.read<SearchBloc>().isLoadingMoreResults = false;
-    context.read<SearchBloc>().searchTextController.clear();
+    // context.read<SearchBloc>().page = 1;
+    // context.read<SearchBloc>().tempValue = '';
+    // context.read<SearchBloc>().isLoadingMoreResults = false;
+    // context.read<SearchBloc>().searchTextController.clear();
     super.initState();
   }
 
@@ -194,7 +193,7 @@ class _SearchPageState extends State<SearchPage> {
           onWillPop: () => Future(
             () {
               BlocProvider.of<SearchBloc>(context)
-                  .add(ResetSearchResultsEvent());
+                  .add(LeaveSearchPage());
 
               return true;
             },
