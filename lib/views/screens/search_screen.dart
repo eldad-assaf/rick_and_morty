@@ -14,6 +14,8 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  final FocusNode _focusNode = FocusNode();
+
   Widget determineWidgetByState(SearchState state) {
     switch (state.runtimeType) {
       case InitialSearchState:
@@ -57,17 +59,19 @@ class _SearchScreenState extends State<SearchScreen> {
           child: SafeArea(
             child: Scaffold(
               appBar: AppBar(
-                title: const Text('Search'),
+                centerTitle: true,
+                title: const Text('Characters Search'),
               ),
               body: Column(
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextField(
+                      focusNode: _focusNode,
+                      autofocus: true,
                       controller:
                           context.read<SearchBloc>().searchTextController,
                       decoration: const InputDecoration(
-                        hintText: 'put example',
                         prefixIcon: Icon(Icons.search),
                       ),
                     ),
