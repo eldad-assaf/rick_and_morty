@@ -1,8 +1,8 @@
-import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty/state/models/character_model.dart';
+import 'package:rick_and_morty/state/models/characters_response.dart';
 import 'package:rick_and_morty/state/repository/characters_repository.dart';
 part 'all_characters_event.dart';
 part 'all_characters_state.dart';

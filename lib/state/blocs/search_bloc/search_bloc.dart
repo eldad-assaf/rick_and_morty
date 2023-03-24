@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:rick_and_morty/state/models/characters_response.dart';
 import 'package:rick_and_morty/state/repository/characters_repository.dart';
 import '../../models/character_model.dart';
 part 'search_event.dart';

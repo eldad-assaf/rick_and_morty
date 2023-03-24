@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rick_and_morty/state/repository/characters_repository.dart';
 import 'package:rick_and_morty/views/widgets/character_card.dart';
 import 'package:rick_and_morty/views/widgets/loading_card.dart';
+import '../../state/models/characters_response.dart';
 
 class CharactersListGridView extends StatelessWidget {
   final CharactersResponse charactersResponse;
