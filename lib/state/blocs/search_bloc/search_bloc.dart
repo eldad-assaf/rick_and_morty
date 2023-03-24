@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,8 +15,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   int page = 1;
   bool isLoadingMoreResults = false;
   String tempValue = '';
-
-
+  Timer? _timer;
 
   SearchBloc(this._characterRepository)
       : super(const InitialSearchState(null)) {
@@ -31,7 +31,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       log('temoValue: $tempValue , controllerValue : ${searchTextController.text}');
       if (searchTextController.text.isNotEmpty) {
         if (tempValue.trim() != searchTextController.text.trim()) {
-          add(SearchCharacterEvent(name: searchTextController.text));
+          _timer?.cancel();
+          _timer = Timer(const Duration(milliseconds: 500), () {
+            add(SearchCharacterEvent(name: searchTextController.text));
+          });
           tempValue = searchTextController.text.trim();
         }
       }
@@ -89,4 +92,3 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     });
   }
 }
- 
