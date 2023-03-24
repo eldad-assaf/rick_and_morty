@@ -52,7 +52,10 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
       }
       emit(const LoadingCharactersState(null));
       final CharactersResponse? charactersResponse =
-          await _characterRepository.getCharacters(page);
+          await _characterRepository.getCharacters(page).catchError((e) {
+        emit(const CharactersErrorState('404!'));
+        return null;
+      });
       if (charactersResponse != null) {
         emit(CharactersLoadedState(charactersResponse: charactersResponse));
       } else if (charactersResponse == null) {

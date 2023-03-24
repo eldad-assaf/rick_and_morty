@@ -10,16 +10,11 @@ class CharacterRepository {
   final String endPoind = 'https://rickandmortyapi.com/api/character/';
 
   Future<CharactersResponse?> getCharacters(int page) async {
-    Map<String, dynamic> _params = {'page': page};
-
-    // final String endPoind =
-    //     'https://rickandmortyapi.com/api/character?page=$page';
+    Map<String, dynamic> params = {'page': page};
     try {
-      // await Future.delayed(
-      //     const Duration(seconds: 2)); // Simulate delay of 2 seconds
 
       final Response response =
-          await dio.get(endPoind, queryParameters: _params);
+          await dio.get(endPoind, queryParameters: params);
 
       if (response.statusCode == 200) {
         final CharactersResponse charactersResponse =
@@ -36,11 +31,11 @@ class CharacterRepository {
 
   Future<CharactersResponse?> searchCharacters(
       {required String name, required int page}) async {
-    Map<String, dynamic> _params = {'name': name, 'page': page};
+    Map<String, dynamic> params = {'name': name, 'page': page};
 
     try {
       final Response response =
-          await dio.get(endPoind, queryParameters: _params);
+          await dio.get(endPoind, queryParameters: params);
       if (response.statusCode == 200) {
         final CharactersResponse charactersResponse =
             CharactersResponse.fromJson(response.data);

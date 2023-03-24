@@ -7,6 +7,27 @@ import '../../state/blocs/all_characters_bloc/all_characters_bloc.dart';
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 
+  Widget determineWidgetByState(AllCharacterState state, BuildContext context) {
+    switch (state.runtimeType) {
+      case LoadingCharactersState:
+        return const Center(child: CircularProgressIndicator());
+      case CharactersLoadedState:
+        context.read<AllCharactersBloc>().add(ScrollToLastPosition());
+        return CharactersListGridView(
+          charactersResponse: state.charactersResponse!,
+          isLoadingMore: context.read<AllCharactersBloc>().isLoadingMore,
+          scrollController:
+              context.read<AllCharactersBloc>().allCharactersScrollController,
+        );
+      case CharactersErrorState:
+        return const Center(
+          child: Text('Opps! Something went wrong :-('),
+        );
+      default:
+        return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -28,25 +49,7 @@ class MainScreen extends StatelessWidget {
         ),
         body: BlocBuilder<AllCharactersBloc, AllCharacterState>(
           builder: (context, state) {
-            if (state is LoadingCharactersState) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (state is CharactersErrorState) {
-              return Center(
-                child: Text(state.errorMessage),
-              );
-            }
-            if (state is CharactersLoadedState) {
-              context.read<AllCharactersBloc>().add(ScrollToLastPosition());
-              return CharactersListGridView(
-                charactersResponse: state.charactersResponse!,
-                isLoadingMore: context.read<AllCharactersBloc>().isLoadingMore,
-                scrollController: context
-                    .read<AllCharactersBloc>()
-                    .allCharactersScrollController,
-              );
-            }
-            return Container();
+            return determineWidgetByState(state, context);
           },
         ),
       ),

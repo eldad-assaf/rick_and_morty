@@ -50,7 +50,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       if (charactersResponse != null) {
         emit(ResultsLoadedState(charactersResponse: charactersResponse));
       } else if (charactersResponse == null) {
-        emit(const SearchErrorState('opps'));
+        emit(const CharacterNotFoundState());
       }
     });
 

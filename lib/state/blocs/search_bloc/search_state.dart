@@ -35,3 +35,10 @@ class SearchErrorState extends SearchState {
   @override
   List<Object?> get props => [errorMessage];
 }
+
+class CharacterNotFoundState extends SearchState {
+  const CharacterNotFoundState() : super(null);
+
+  @override
+  List<Object?> get props => [];
+}
