@@ -40,16 +40,16 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
     });
 
     on<LoadCharactersEvent>((event, emit) async {
-      final charactersResponseStorage = CharactersResponseStorage();
-      final charactersResponseFromStorage =
-          charactersResponseStorage.charactersResponse;
+      // final charactersResponseStorage = CharactersResponseStorage();
+      // final charactersResponseFromStorage =
+      //     charactersResponseStorage.charactersResponse;
 
-      if (charactersResponseFromStorage != null) {
-        emit(CharactersLoadedState(
-            charactersResponse: charactersResponseFromStorage));
+      // if (charactersResponseFromStorage != null) {
+      //   emit(CharactersLoadedState(
+      //       charactersResponse: charactersResponseFromStorage));
 
-        return;
-      }
+      //   return;
+      // }
       emit(const LoadingCharactersState(null));
       final CharactersResponse? charactersResponse =
           await _characterRepository.getCharacters(page).catchError((e) {
