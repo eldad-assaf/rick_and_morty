@@ -75,16 +75,16 @@ class CharacterDetailsScreen extends StatelessWidget {
                   const SizedBox(
                     width: 18,
                   ),
-                  BlocBuilder<FavouritesBloc, FavouritesState>(
+                  BlocBuilder<FavouritesBloc, List<Character>>(
                     builder: (context, state) {
-                      bool? isFav = state.favourites?.contains(character);
+                      bool? isFav = state.contains(character);
                       return IconButton(
                         onPressed: () {
                           context
                               .read<FavouritesBloc>()
                               .add(ToggleIsFavourite(character: character));
                         },
-                        icon: isFav == null || isFav == false
+                        icon: isFav == false
                             ? const Icon(
                                 Icons.favorite_outline,
                                 size: 35,
