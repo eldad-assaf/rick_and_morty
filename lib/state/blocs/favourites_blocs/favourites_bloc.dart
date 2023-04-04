@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rick_and_morty/state/models/character_model.dart';
@@ -32,6 +29,7 @@ class FavouritesBloc extends HydratedBloc<FavouritesEvent, List<Character>> {
         Character.fromJson(el),
       ),
     );
+   
     return characters;
   }
 
