@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty/state/blocs/filter_bloc/bloc/filter_bloc.dart';
@@ -25,7 +26,12 @@ void show(BuildContext context) {
                           ),
                           const Spacer(),
                           TextButton.icon(
-                              onPressed: () {},
+                              onPressed: () {
+                                log('clear');
+                                context
+                                    .read<FilterBloc>()
+                                    .add(ClearFilterEvent());
+                              },
                               icon: const Icon(
                                 Icons.clear,
                                 color: Colors.red,

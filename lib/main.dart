@@ -29,19 +29,20 @@ class RickAndMortyApp extends StatelessWidget {
       create: (context) => CharacterRepository(dio: Dio()),
       child: MultiBlocProvider(
           providers: [
+            BlocProvider<FilterBloc>(
+              create: (context) => FilterBloc(),
+            ),
             BlocProvider<AllCharactersBloc>(
-              create: (context) =>
-                  AllCharactersBloc(RepositoryProvider.of(context))
-                    ..add(LoadCharactersEvent()),
+              create: (context) => AllCharactersBloc(
+                  RepositoryProvider.of(context),
+                  BlocProvider.of<FilterBloc>(context))
+                ..add(LoadCharactersEvent()),
             ),
             BlocProvider<SearchBloc>(
               create: (context) => SearchBloc(RepositoryProvider.of(context)),
             ),
             BlocProvider<FavouritesBloc>(
               create: (context) => FavouritesBloc(),
-            ),
-            BlocProvider<FilterBloc>(
-              create: (context) => FilterBloc(),
             ),
           ],
           child: MaterialApp(

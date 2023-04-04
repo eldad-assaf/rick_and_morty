@@ -1,14 +1,20 @@
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty/state/models/character_model.dart';
 import 'package:rick_and_morty/state/models/characters_response.dart';
 import 'package:rick_and_morty/state/repository/characters_repository.dart';
+
+import '../filter_bloc/bloc/filter_bloc.dart';
 part 'all_characters_event.dart';
 part 'all_characters_state.dart';
 
 class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
   final CharacterRepository _characterRepository;
+  final FilterBloc _filterBloc;
+
   int page = 1;
   bool isLoadingMore = false;
   bool hasReachedLastPage = false;
@@ -16,8 +22,12 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
   final ScrollController allCharactersScrollController = ScrollController();
   // final ScrollController searchResultsScrollController = ScrollController();
 
-  AllCharactersBloc(this._characterRepository)
+  AllCharactersBloc(this._characterRepository, this._filterBloc)
       : super(const InitialState(null)) {
+    _filterBloc.stream.listen((state) {
+      final filterState = state;
+
+    });
     allCharactersScrollController.addListener(() {
       lastScrollPosition = allCharactersScrollController.position;
       add(LoadMoreCharactersEvent());
@@ -25,9 +35,6 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
 
     on<SaveCurrentCharacterResponse>((event, emit) {
       final charactersResponseStorage = CharactersResponseStorage();
-
-      // final CharactersResponse charactersResponse = state.charactersResponse!; //no need?
-
       charactersResponseStorage.characterResponse = state.charactersResponse!;
     });
 
@@ -40,16 +47,7 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
     });
 
     on<LoadCharactersEvent>((event, emit) async {
-      // final charactersResponseStorage = CharactersResponseStorage();
-      // final charactersResponseFromStorage =
-      //     charactersResponseStorage.charactersResponse;
 
-      // if (charactersResponseFromStorage != null) {
-      //   emit(CharactersLoadedState(
-      //       charactersResponse: charactersResponseFromStorage));
-
-      //   return;
-      // }
       emit(const LoadingCharactersState(null));
       final CharactersResponse? charactersResponse =
           await _characterRepository.getCharacters(page).catchError((e) {

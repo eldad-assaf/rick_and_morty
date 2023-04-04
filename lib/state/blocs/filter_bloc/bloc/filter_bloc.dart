@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +8,12 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
   String filterNameBy = '';
   String filterStatusBy = '';
   String filterspeciesBy = '';
+
+  void resetValues() {
+    filterNameBy = '';
+    filterStatusBy = '';
+    filterspeciesBy = '';
+  }
 
   FilterBloc() : super(FilterState.initial()) {
     on<FilterByNameEvent>((event, emit) {
@@ -33,6 +38,10 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
               ? 'alien'
               : 'unknown';
       emit(FilterState.copyWith(speciesFilter: event.speciesFilterType));
+    });
+    on<ClearFilterEvent>((event, emit) {
+      resetValues();
+      emit(FilterState.initial());
     });
   }
 }

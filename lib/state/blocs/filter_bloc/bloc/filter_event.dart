@@ -25,3 +25,5 @@ class FilterBySpeciesEvent extends FilterEvent {
     required this.speciesFilterType,
   });
 }
+
+class ClearFilterEvent extends FilterEvent{}
