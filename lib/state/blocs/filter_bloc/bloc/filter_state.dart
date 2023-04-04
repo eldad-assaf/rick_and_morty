@@ -1,5 +1,7 @@
 part of 'filter_bloc.dart';
 
+//enum FilterType { nameFilter, statusFilter, speciesFilter }
+
 enum NameFilter { ascending, descending }
 
 enum StatusFilter { alive, dead, unknown }

@@ -2,8 +2,26 @@ part of 'filter_bloc.dart';
 
 abstract class FilterEvent {}
 
-class FilterSelectionEvent extends FilterEvent {
-  final String nameFilterType;
+class FilterByNameEvent extends FilterEvent {
+  final NameFilter nameFilterType;
 
-  FilterSelectionEvent({required this.nameFilterType});
+  FilterByNameEvent({
+    required this.nameFilterType,
+  });
+}
+
+class FilterByStatusEvent extends FilterEvent {
+  final StatusFilter statusFilterType;
+
+  FilterByStatusEvent({
+    required this.statusFilterType,
+  });
+}
+
+class FilterBySpeciesEvent extends FilterEvent {
+  final SpeciesFilter speciesFilterType;
+
+  FilterBySpeciesEvent({
+    required this.speciesFilterType,
+  });
 }

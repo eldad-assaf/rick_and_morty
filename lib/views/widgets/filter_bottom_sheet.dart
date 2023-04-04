@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty/state/blocs/filter_bloc/bloc/filter_bloc.dart';
@@ -16,12 +14,28 @@ void show(BuildContext context) {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Filter Options',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        children: [
+                          const Text(
+                            'Filter Options',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const Spacer(),
+                          TextButton.icon(
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.clear,
+                                color: Colors.red,
+                              ),
+                              label: const Text(
+                                'clear',
+                                style:
+                                    TextStyle(fontSize: 18, color: Colors.red),
+                              ))
+                        ],
                       ),
                       const SizedBox(height: 16.0),
                       const Text(
@@ -35,23 +49,21 @@ void show(BuildContext context) {
                         children: [
                           Radio(
                             value: 'asc',
-                            groupValue:
-                                context.read<FilterBloc>().nameFilterType,
+                            groupValue: context.read<FilterBloc>().filterNameBy,
                             onChanged: (value) {
-                              log(value.toString());
-
-                              context.read<FilterBloc>().add(
-                                  FilterSelectionEvent(nameFilterType: 'asc'));
+                              context.read<FilterBloc>().add(FilterByNameEvent(
+                                    nameFilterType: NameFilter.ascending,
+                                  ));
                             },
                           ),
                           const Text('Ascending'),
                           Radio(
                             value: 'desc',
-                            groupValue:
-                                context.read<FilterBloc>().nameFilterType,
+                            groupValue: context.read<FilterBloc>().filterNameBy,
                             onChanged: (value) {
-                              context.read<FilterBloc>().add(
-                                  FilterSelectionEvent(nameFilterType: 'desc'));
+                              context.read<FilterBloc>().add(FilterByNameEvent(
+                                    nameFilterType: NameFilter.descending,
+                                  ));
                             },
                           ),
                           const Text('Descending'),
@@ -69,31 +81,34 @@ void show(BuildContext context) {
                         children: [
                           Radio(
                             value: 'alive',
-                            groupValue: '_statusFilter',
+                            groupValue:
+                                context.read<FilterBloc>().filterStatusBy,
                             onChanged: (value) {
-                              // setState(() {
-                              //   _statusFilter = value;
-                              // });
+                              context.read<FilterBloc>().add(
+                                  FilterByStatusEvent(
+                                      statusFilterType: StatusFilter.alive));
                             },
                           ),
                           const Text('Alive'),
                           Radio(
                             value: 'dead',
-                            groupValue: '_statusFilter',
+                            groupValue:
+                                context.read<FilterBloc>().filterStatusBy,
                             onChanged: (value) {
-                              // setState(() {
-                              //   _statusFilter = value;
-                              // });
+                              context.read<FilterBloc>().add(
+                                  FilterByStatusEvent(
+                                      statusFilterType: StatusFilter.dead));
                             },
                           ),
                           const Text('Dead'),
                           Radio(
                             value: 'unknown',
-                            groupValue: '_statusFilter',
+                            groupValue:
+                                context.read<FilterBloc>().filterStatusBy,
                             onChanged: (value) {
-                              // setState(() {
-                              //   _statusFilter = value;
-                              // });
+                              context.read<FilterBloc>().add(
+                                  FilterByStatusEvent(
+                                      statusFilterType: StatusFilter.unknown));
                             },
                           ),
                           const Text('Unknown'),
@@ -111,45 +126,49 @@ void show(BuildContext context) {
                         children: [
                           Radio(
                             value: 'human',
-                            groupValue: '_speciesFilter',
+                            groupValue:
+                                context.read<FilterBloc>().filterspeciesBy,
                             onChanged: (value) {
-                              // setState(() {
-                              //   _speciesFilter = value;
-                              // });
+                              context.read<FilterBloc>().add(
+                                  FilterBySpeciesEvent(
+                                      speciesFilterType: SpeciesFilter.human));
                             },
                           ),
                           const Text('Human'),
                           Radio(
                             value: 'alien',
-                            groupValue: '_speciesFilter',
+                            groupValue:
+                                context.read<FilterBloc>().filterspeciesBy,
                             onChanged: (value) {
-                              // setState(() {
-                              //   _speciesFilter = value;
-                              // });
+                              context.read<FilterBloc>().add(
+                                  FilterBySpeciesEvent(
+                                      speciesFilterType: SpeciesFilter.alien));
                             },
                           ),
                           const Text('Alien'),
                           Radio(
                             value: 'unknown',
-                            groupValue: '_speciesFilter',
+                            groupValue:
+                                context.read<FilterBloc>().filterspeciesBy,
                             onChanged: (value) {
-                              // setState(() {
-                              //   _speciesFilter = value;
-                              // });
+                              context.read<FilterBloc>().add(
+                                  FilterBySpeciesEvent(
+                                      speciesFilterType:
+                                          SpeciesFilter.unknown));
                             },
                           ),
                           const Text('Unknown'),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 15,
                       ),
                       Container(
-                        color: Colors.amber,
-                        child: Center(
+                        color: Colors.grey.shade900,
+                        child: const Center(
                           child: Icon(
                             Icons.done,
-                            size: 32,
+                            size: 45,
                           ),
                         ),
                       )
