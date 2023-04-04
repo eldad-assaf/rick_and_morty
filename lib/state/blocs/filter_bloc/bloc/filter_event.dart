@@ -26,4 +26,6 @@ class FilterBySpeciesEvent extends FilterEvent {
   });
 }
 
+class ApplyFiltersEvent extends FilterEvent{}
+
 class ClearFilterEvent extends FilterEvent{}

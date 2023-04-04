@@ -1,16 +1,19 @@
 import 'package:dio/dio.dart';
 import 'package:rick_and_morty/state/models/characters_response.dart';
 
+import '../blocs/filter_bloc/bloc/filter_bloc.dart';
+
 class CharacterRepository {
   final Dio dio;
   CharacterRepository({required this.dio});
 
   final String endPoind = 'https://rickandmortyapi.com/api/character/';
 
-  Future<CharactersResponse?> getCharacters(int page) async {
+  Future<CharactersResponse?> getCharacters(
+    int page,
+  ) async {
     Map<String, dynamic> params = {'page': page};
     try {
-
       final Response response =
           await dio.get(endPoind, queryParameters: params);
 
@@ -53,7 +56,3 @@ class CharacterRepository {
     }
   }
 }
-
-
-
-

@@ -10,7 +10,7 @@ void show(BuildContext context) {
         return BlocBuilder<FilterBloc, FilterState>(
           builder: (context, state) {
             return Container(
-                height: 400.0,
+                height: 700.0,
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,38 +41,6 @@ void show(BuildContext context) {
                                 style:
                                     TextStyle(fontSize: 18, color: Colors.red),
                               ))
-                        ],
-                      ),
-                      const SizedBox(height: 16.0),
-                      const Text(
-                        'Name',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Radio(
-                            value: 'asc',
-                            groupValue: context.read<FilterBloc>().filterNameBy,
-                            onChanged: (value) {
-                              context.read<FilterBloc>().add(FilterByNameEvent(
-                                    nameFilterType: NameFilter.ascending,
-                                  ));
-                            },
-                          ),
-                          const Text('Ascending'),
-                          Radio(
-                            value: 'desc',
-                            groupValue: context.read<FilterBloc>().filterNameBy,
-                            onChanged: (value) {
-                              context.read<FilterBloc>().add(FilterByNameEvent(
-                                    nameFilterType: NameFilter.descending,
-                                  ));
-                            },
-                          ),
-                          const Text('Descending'),
                         ],
                       ),
                       const SizedBox(height: 16.0),
@@ -169,6 +137,66 @@ void show(BuildContext context) {
                       const SizedBox(
                         height: 15,
                       ),
+                      const Text(
+                        'Gender',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Radio(
+                            value: 'female',
+                            groupValue:
+                                context.read<FilterBloc>().filterGenderBy,
+                            onChanged: (value) {},
+                          ),
+                          const Text('Female'),
+                          Radio(
+                            value: 'male',
+                            groupValue:
+                                context.read<FilterBloc>().filterGenderBy,
+                            onChanged: (value) {
+                              // context.read<FilterBloc>().add(
+                              //     FilterBySpeciesEvent(
+                              //         speciesFilterType: SpeciesFilter.alien));
+                            },
+                          ),
+                          const Text('Male'),
+                          Radio(
+                            value: 'genderless ',
+                            groupValue:
+                                context.read<FilterBloc>().filterGenderBy,
+                            onChanged: (value) {
+                              // context.read<FilterBloc>().add(
+                              //     FilterBySpeciesEvent(
+                              //         speciesFilterType:
+                              //             SpeciesFilter.unknown));
+                            },
+                          ),
+                          const Text('Genderless'),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: Row(
+                          children: [
+                            Radio(
+                              value: 'unknown',
+                              groupValue:
+                                  context.read<FilterBloc>().filterGenderBy,
+                              onChanged: (value) {
+                                // context.read<FilterBloc>().add(
+                                //     FilterBySpeciesEvent(
+                                //         speciesFilterType:
+                                //             SpeciesFilter.unknown));
+                              },
+                            ),
+                            const Text('Unknown'),
+                          ],
+                        ),
+                      ),
                       Container(
                         color: Colors.grey.shade900,
                         child: const Center(
@@ -183,3 +211,4 @@ void show(BuildContext context) {
         );
       });
 }
+// female, male, genderless or unknown

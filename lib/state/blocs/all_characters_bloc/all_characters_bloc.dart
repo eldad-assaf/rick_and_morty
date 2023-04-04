@@ -26,6 +26,7 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
       : super(const InitialState(null)) {
     _filterBloc.stream.listen((state) {
       final filterState = state;
+      
 
     });
     allCharactersScrollController.addListener(() {
