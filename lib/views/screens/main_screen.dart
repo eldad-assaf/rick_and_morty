@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rick_and_morty/views/screens/favourites_screen.dart';
 import 'package:rick_and_morty/views/screens/search_screen.dart';
 import 'package:rick_and_morty/views/widgets/characters_list_grid_view.dart';
+import 'package:rick_and_morty/views/widgets/filter_bottom_sheet.dart';
 import '../../state/blocs/all_characters_bloc/all_characters_bloc.dart';
 
 class MainScreen extends StatelessWidget {
@@ -33,7 +35,21 @@ class MainScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+              onPressed: () => show(context),
+              icon: const Icon(Icons.filter_list)),
           actions: [
+            IconButton(
+              icon: const Icon(Icons.favorite_border_outlined),
+              onPressed: () {
+                context
+                    .read<AllCharactersBloc>()
+                    .add(SaveCurrentCharacterResponse());
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const FavouritesScreen(),
+                ));
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.search),
               onPressed: () {
@@ -44,7 +60,7 @@ class MainScreen extends StatelessWidget {
                   builder: (context) => const SearchScreen(),
                 ));
               },
-            )
+            ),
           ],
         ),
         body: BlocBuilder<AllCharactersBloc, AllCharacterState>(
