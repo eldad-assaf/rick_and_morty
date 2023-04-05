@@ -2,40 +2,41 @@ part of 'filter_bloc.dart';
 
 //enum FilterType { nameFilter, statusFilter, speciesFilter }
 
-enum NameFilter { ascending, descending }
-
 enum StatusFilter { alive, dead, unknown }
 
 enum SpeciesFilter { human, alien, unknown }
 
 class FilterState extends Equatable {
-  final NameFilter? nameFilter;
   final StatusFilter? statusFilter;
   final SpeciesFilter? speciesFilter;
+  final bool applyFilter;
 
   const FilterState({
-    required this.nameFilter,
     required this.statusFilter,
     required this.speciesFilter,
+    required this.applyFilter,
   });
 
   factory FilterState.initial() {
     return const FilterState(
-        nameFilter: null, statusFilter: null, speciesFilter: null);
+      statusFilter: null,
+      speciesFilter: null,
+      applyFilter: false,
+    );
   }
 
   @override
-  List<Object?> get props => [nameFilter, statusFilter, speciesFilter];
+  List<Object?> get props => [statusFilter, speciesFilter, applyFilter];
 
-  static FilterState copyWith({
-    NameFilter? nameFilter,
+  FilterState copyWith({
     StatusFilter? statusFilter,
     SpeciesFilter? speciesFilter,
+    bool? applyFilter,
   }) {
     return FilterState(
-      nameFilter: nameFilter ?? nameFilter,
-      statusFilter: statusFilter ?? statusFilter,
-      speciesFilter: speciesFilter ?? speciesFilter,
+      statusFilter: statusFilter ?? this.statusFilter,
+      speciesFilter: speciesFilter ?? this.speciesFilter,
+      applyFilter: applyFilter ?? this.applyFilter,
     );
   }
 }

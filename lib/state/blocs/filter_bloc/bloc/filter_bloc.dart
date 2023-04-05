@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 part 'filter_event.dart';
@@ -11,7 +13,7 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
   void resetValues() {
     filterStatusBy = '';
     filterspeciesBy = '';
-     filterGenderBy = '';
+    filterGenderBy = '';
   }
 
   FilterBloc() : super(FilterState.initial()) {
@@ -21,7 +23,10 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
           : event.statusFilterType == StatusFilter.dead
               ? 'dead'
               : 'unknown';
-      //  emit(FilterState.copyWith(statusFilter: event.statusFilterType));
+      log('FilterByStatusEvent emmiting state with : status ${event.statusFilterType}  ');
+
+      emit(state.copyWith(
+          statusFilter: event.statusFilterType, applyFilter: false));
     });
 
     on<FilterBySpeciesEvent>((event, emit) {
@@ -30,9 +35,14 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
           : event.speciesFilterType == SpeciesFilter.alien
               ? 'alien'
               : 'unknown';
-      // emit(FilterState.copyWith(speciesFilter: event.speciesFilterType));
+      log('FilterBySpeciesEvent emmiting state with : species ${event.speciesFilterType}  ');
+
+      emit(state.copyWith(
+          speciesFilter: event.speciesFilterType, applyFilter: false));
     });
-    on<ApplyFiltersEvent>((event, emit) {});
+    on<ApplyFiltersEvent>((event, emit) {
+      emit(state.copyWith(applyFilter: true));
+    });
 
     on<ClearFilterEvent>((event, emit) {
       resetValues();

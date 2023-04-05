@@ -197,12 +197,16 @@ void show(BuildContext context) {
                           ],
                         ),
                       ),
-                      Container(
-                        color: Colors.grey.shade900,
-                        child: const Center(
-                          child: Icon(
-                            Icons.done,
-                            size: 45,
+                      InkWell(
+                        onTap: () =>
+                            context.read<FilterBloc>().add(ApplyFiltersEvent()),
+                        child: Container(
+                          color: Colors.grey.shade900,
+                          child: const Center(
+                            child: Icon(
+                              Icons.done,
+                              size: 45,
+                            ),
                           ),
                         ),
                       )

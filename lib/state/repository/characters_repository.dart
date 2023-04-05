@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:rick_and_morty/state/models/characters_response.dart';
 
@@ -53,6 +55,27 @@ class CharacterRepository {
       } else {
         throw Exception('Failed to load characters : ${error.message}');
       }
+    }
+  }
+
+  Future<CharactersResponse?> filterCharacters(int page,
+      {required Map<String, dynamic> params}) async {
+    //Map<String, dynamic> params = {'page': page};
+    log(params.toString());
+    try {
+      final Response response =
+          await dio.get(endPoind, queryParameters: params);
+
+      if (response.statusCode == 200) {
+        final CharactersResponse charactersResponse =
+            CharactersResponse.fromJson(response.data);
+
+        return charactersResponse;
+      } else {
+        return null;
+      }
+    } on DioError catch (error) {
+      throw Exception('Failed to load characters : ${error.message}');
     }
   }
 }

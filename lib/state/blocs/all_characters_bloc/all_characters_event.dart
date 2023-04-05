@@ -12,3 +12,12 @@ class ResetSearchPage extends AllCharacterEvent {}
 class SaveCurrentCharacterResponse extends AllCharacterEvent {}
 
 class ScrollToLastPosition extends AllCharacterEvent {}
+
+class LoadFilterdCharactersEvent extends AllCharacterEvent {
+  final Map<String, dynamic> params;
+  LoadFilterdCharactersEvent({
+    required this.params,
+  });
+}
+
+class LoadMoreFilterdCharactersEvent extends AllCharacterEvent {}

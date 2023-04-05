@@ -2,13 +2,13 @@ part of 'filter_bloc.dart';
 
 abstract class FilterEvent {}
 
-class FilterByNameEvent extends FilterEvent {
-  final NameFilter nameFilterType;
+// class FilterByNameEvent extends FilterEvent {
+//   final NameFilter nameFilterType;
 
-  FilterByNameEvent({
-    required this.nameFilterType,
-  });
-}
+//   FilterByNameEvent({
+//     required this.nameFilterType,
+//   });
+// }
 
 class FilterByStatusEvent extends FilterEvent {
   final StatusFilter statusFilterType;
