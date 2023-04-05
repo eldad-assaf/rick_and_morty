@@ -22,7 +22,6 @@ class LoadingCharactersState extends AllCharacterState {
 class CharactersLoadedState extends AllCharacterState {
   const CharactersLoadedState({
     required charactersResponse,
-  
   }) : super(charactersResponse);
 
   @override
