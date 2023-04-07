@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:rick_and_morty/state/models/characters_response.dart';
 
-import '../blocs/filter_bloc/bloc/filter_bloc.dart';
 
 class CharacterRepository {
   final Dio dio;
@@ -61,10 +60,15 @@ class CharacterRepository {
   Future<CharactersResponse?> filterCharacters(int page,
       {required Map<String, dynamic> params}) async {
     //Map<String, dynamic> params = {'page': page};
+    log('filterCharacters');
     log(params.toString());
+    log('page: $page');
+    // params = {'page': page, 'status': 'dead', 'species': 'alien'};
+    final newParams = {'page': page, ...params};
+
     try {
       final Response response =
-          await dio.get(endPoind, queryParameters: params);
+          await dio.get(endPoind, queryParameters: newParams);
 
       if (response.statusCode == 200) {
         final CharactersResponse charactersResponse =

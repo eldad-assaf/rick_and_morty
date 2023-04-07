@@ -2,30 +2,9 @@ part of 'filter_bloc.dart';
 
 abstract class FilterEvent {}
 
-// class FilterByNameEvent extends FilterEvent {
-//   final NameFilter nameFilterType;
-
-//   FilterByNameEvent({
-//     required this.nameFilterType,
-//   });
-// }
-
-class FilterByStatusEvent extends FilterEvent {
-  final StatusFilter statusFilterType;
-
-  FilterByStatusEvent({
-    required this.statusFilterType,
-  });
+class ApplyFiltersEvent extends FilterEvent {
+  final Map<String, dynamic>? filterParams;
+  ApplyFiltersEvent({required this.filterParams});
 }
 
-class FilterBySpeciesEvent extends FilterEvent {
-  final SpeciesFilter speciesFilterType;
-
-  FilterBySpeciesEvent({
-    required this.speciesFilterType,
-  });
-}
-
-class ApplyFiltersEvent extends FilterEvent{}
-
-class ClearFilterEvent extends FilterEvent{}
+class ClearFilterEvent extends FilterEvent {}

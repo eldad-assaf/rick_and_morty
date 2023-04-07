@@ -9,6 +9,8 @@ class LoadMoreCharactersEvent extends AllCharacterEvent {}
 
 class ResetSearchPage extends AllCharacterEvent {}
 
+class GoBackToInitState extends AllCharacterEvent {}
+
 class SaveCurrentCharacterResponse extends AllCharacterEvent {}
 
 class ScrollToLastPosition extends AllCharacterEvent {}
@@ -20,4 +22,9 @@ class LoadFilterdCharactersEvent extends AllCharacterEvent {
   });
 }
 
-class LoadMoreFilterdCharactersEvent extends AllCharacterEvent {}
+class LoadMoreFilterdCharactersEvent extends AllCharacterEvent {
+  final Map<String, dynamic> params;
+  LoadMoreFilterdCharactersEvent({
+    required this.params,
+  });
+}
