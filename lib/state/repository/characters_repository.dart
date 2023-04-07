@@ -59,11 +59,7 @@ class CharacterRepository {
 
   Future<CharactersResponse?> filterCharacters(int page,
       {required Map<String, dynamic> params}) async {
-    //Map<String, dynamic> params = {'page': page};
-    log('filterCharacters');
-    log(params.toString());
-    log('page: $page');
-    // params = {'page': page, 'status': 'dead', 'species': 'alien'};
+
     final newParams = {'page': page, ...params};
 
     try {
