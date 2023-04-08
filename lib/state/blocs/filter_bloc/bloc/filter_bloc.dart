@@ -12,6 +12,8 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
       emit(FilterdListState(filterParams: event.filterParams));
     });
 
-    on<ClearFilterEvent>((event, emit) {});
+    on<ClearFilterEvent>((event, emit) {
+      emit(const UnFilterdListState(null));
+    });
   }
 }

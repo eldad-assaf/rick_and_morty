@@ -37,6 +37,7 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
       } else if (state is UnFilterdListState) {
         shouldFilter = false;
         add(GoBackToInitState());
+        add(LoadCharactersEvent());
       }
     });
     allCharactersScrollController.addListener(() {
@@ -56,6 +57,8 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
       page = 1;
       isLoadingMore = false;
       hasReachedLastPage = false;
+      filterParams = {};
+      shouldFilter = false;
       emit(const InitialState(null));
     });
 
