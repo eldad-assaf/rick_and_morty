@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
@@ -12,6 +10,8 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
       emit(FilterdListState(filterParams: event.filterParams));
     });
 
-    on<ClearFilterEvent>((event, emit) {});
+    on<ClearFilterEvent>((event, emit) {
+      emit(const UnFilterdListState(null));
+    });
   }
 }

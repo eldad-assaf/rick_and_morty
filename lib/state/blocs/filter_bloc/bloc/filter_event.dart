@@ -7,4 +7,7 @@ class ApplyFiltersEvent extends FilterEvent {
   ApplyFiltersEvent({required this.filterParams});
 }
 
+
+
+
 class ClearFilterEvent extends FilterEvent {}

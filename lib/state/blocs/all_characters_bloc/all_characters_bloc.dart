@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty/state/models/character_model.dart';
 import 'package:rick_and_morty/state/models/characters_response.dart';
 import 'package:rick_and_morty/state/repository/characters_repository.dart';
-
 import '../filter_bloc/bloc/filter_bloc.dart';
 part 'all_characters_event.dart';
 part 'all_characters_state.dart';
@@ -22,7 +21,6 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
   bool hasReachedLastPage = false;
   ScrollPosition? lastScrollPosition;
   final ScrollController allCharactersScrollController = ScrollController();
-  // final ScrollController searchResultsScrollController = ScrollController();
 
   AllCharactersBloc(this._characterRepository, this._filterBloc)
       : super(const InitialState(null)) {
@@ -35,8 +33,8 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
         filterParams = state.filterParmas;
         add(LoadFilterdCharactersEvent(params: state.filterParmas!));
       } else if (state is UnFilterdListState) {
-        shouldFilter = false;
         add(GoBackToInitState());
+        add(LoadCharactersEvent());
       }
     });
     allCharactersScrollController.addListener(() {
@@ -56,6 +54,8 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
       page = 1;
       isLoadingMore = false;
       hasReachedLastPage = false;
+      filterParams = {};
+      shouldFilter = false;
       emit(const InitialState(null));
     });
 
@@ -69,7 +69,6 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     on<LoadFilterdCharactersEvent>((event, emit) async {
       emit(const LoadingCharactersState(null));
-      log('on<LoadFilterdCharactersEvent>((event, emit) async');
       log(event.params.toString());
       final CharactersResponse? charactersResponse = await _characterRepository
           .filterCharacters(page, params: event.params)
