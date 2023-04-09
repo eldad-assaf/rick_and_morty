@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rick_and_morty/state/blocs/favourites_blocs/favourites_bloc.dart';
+import 'package:rick_and_morty/state/blocs/filter_bloc/bloc/filter_bloc.dart';
+import 'package:rick_and_morty/state/models/character_model.dart';
 import 'package:rick_and_morty/views/screens/favourites_screen.dart';
 import 'package:rick_and_morty/views/screens/search_screen.dart';
 import 'package:rick_and_morty/views/widgets/characters_list_grid_view.dart';
 import 'package:rick_and_morty/views/widgets/filter_bottom_sheet.dart';
 import '../../state/blocs/all_characters_bloc/all_characters_bloc.dart';
+import '../widgets/favourite_icon_with_count.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -39,17 +43,7 @@ class MainScreen extends StatelessWidget {
               onPressed: () => show(context),
               icon: const Icon(Icons.filter_list)),
           actions: [
-            IconButton(
-              icon: const Icon(Icons.favorite_border_outlined),
-              onPressed: () {
-                context
-                    .read<AllCharactersBloc>()
-                    .add(SaveCurrentCharacterResponse());
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const FavouritesScreen(),
-                ));
-              },
-            ),
+            const FavouriteIconWithBadge(),
             IconButton(
               icon: const Icon(Icons.search),
               onPressed: () {
