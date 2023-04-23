@@ -29,7 +29,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         add(LeaveSearchPage());
       }
 
-      log('temoValue: $tempValue , controllerValue : ${searchTextController.text}');
       if (searchTextController.text.isNotEmpty) {
         if (tempValue.trim() != searchTextController.text.trim()) {
           _timer?.cancel();
@@ -46,7 +45,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       final CharactersResponse? charactersResponse = await _characterRepository
           .searchCharacters(name: event.name, page: page);
 
-      log('search response : ${charactersResponse?.characters ?? ''}');
 
       if (charactersResponse != null) {
         emit(ResultsLoadedState(charactersResponse: charactersResponse));

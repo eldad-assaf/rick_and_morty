@@ -29,7 +29,6 @@ void show(BuildContext context) {
             builder: (context, state) {
               if (state.filterParmas != null && _getParmasFromCurrnetState) {
                 for (final i in state.filterParmas!.keys) {
-                  log('forLoop');
                   _filterStatusBy = state.filterParmas!['status'];
                   _filterGenderBy = state.filterParmas!['gender'];
                   _filterspeciesBy = state.filterParmas!['species'];
@@ -291,9 +290,9 @@ void show(BuildContext context) {
 }
 
 Map<String, dynamic>? _buildFilterParamsMap() {
-  Map<String, dynamic> _params = {};
-  _filterStatusBy != null ? _params['status'] = _filterStatusBy : null;
-  _filterGenderBy != null ? _params['gender'] = _filterGenderBy : null;
-  _filterspeciesBy != null ? _params['species'] = _filterspeciesBy : null;
-  return _params;
+  Map<String, dynamic> params = {};
+  _filterStatusBy != null ? params['status'] = _filterStatusBy : null;
+  _filterGenderBy != null ? params['gender'] = _filterGenderBy : null;
+  _filterspeciesBy != null ? params['species'] = _filterspeciesBy : null;
+  return params;
 }

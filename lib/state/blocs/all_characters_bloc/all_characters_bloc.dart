@@ -28,8 +28,6 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
       : super(const InitialState(null)) {
     _filterBloc.stream.listen((state) {
       if (state is FilterdListState) {
-        log('state is FilterdListState');
-        log(state.filterParmas.toString());
         shouldFilter = true;
         add(GoBackToInitState());
         filterParams = state.filterParmas;
@@ -72,8 +70,6 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     on<LoadFilterdCharactersEvent>((event, emit) async {
       emit(const LoadingCharactersState(null));
-      log('on<LoadFilterdCharactersEvent>((event, emit) async');
-      log(event.params.toString());
       final CharactersResponse? charactersResponse = await _characterRepository
           .filterCharacters(page, params: event.params)
           .catchError((e) {
@@ -94,7 +90,6 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
         }
         isLoadingMore = true;
         page++;
-        log('page after ++ = $page');
         final CharactersResponse? charactersResponse =
             await _characterRepository.filterCharacters(page,
                 params: event.params);
