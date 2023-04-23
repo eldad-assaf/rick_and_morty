@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty/state/blocs/all_characters_bloc/all_characters_bloc.dart';
@@ -7,7 +6,6 @@ import 'package:rick_and_morty/state/blocs/favourites_blocs/favourites_bloc.dart
 import 'package:rick_and_morty/state/blocs/filter_bloc/bloc/filter_bloc.dart';
 import 'package:rick_and_morty/state/blocs/search_bloc/search_bloc.dart';
 import 'package:rick_and_morty/state/repository/characters_repository.dart';
-import 'package:rick_and_morty/views/screens/animation_screen.dart';
 import 'package:rick_and_morty/views/screens/main_screen.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
@@ -51,7 +49,7 @@ class RickAndMortyApp extends StatelessWidget {
             theme: ThemeData.dark(),
             initialRoute: '/',
             routes: {
-              '/': (context) => const AnimationScreen(),
+              '/': (context) => const MainScreen(),
             },
           )),
     );

@@ -18,8 +18,11 @@ class FavouritesScreen extends StatelessWidget {
         body: BlocBuilder<FavouritesBloc, List<Character>>(
           builder: (context, state) {
             if (state.isEmpty) {
-              return Container(
-                color: Colors.green,
+              return const Center(
+                child: Text(
+                  'there are no favourites yet.',
+                  style: TextStyle(fontSize: 22),
+                ),
               );
             } else {
               return FavouritesListGridView(

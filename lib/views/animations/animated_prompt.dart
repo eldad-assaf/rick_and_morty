@@ -61,39 +61,80 @@ class _AnimatedPromptState extends State<AnimatedPrompt>
     _controller
       ..reset
       ..forward();
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: const Offset(0, 3),
-          )
-        ],
-      ),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-            minWidth: 100,
-            minHeight: 100,
-            maxHeight: MediaQuery.of(context).size.height * 0.8,
-            maxWidth: MediaQuery.of(context).size.width * 0.8),
-        child: Stack(children: [
-          const SizedBox(
-            height: 160,
-          ),
-          Text(
-            widget.title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
+            )
+          ],
+        ),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+              minWidth: 100,
+              minHeight: 100,
+              maxHeight: MediaQuery.of(context).size.height * 0.8,
+              maxWidth: MediaQuery.of(context).size.width * 0.8),
+          child: Stack(children: [
+            Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 160,
+                  ),
+                  Text(
+                    widget.title,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    widget.subTitle,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          )
-        ]),
+            Positioned.fill(
+                child: SlideTransition(
+              position: yAnimation,
+              child: ScaleTransition(
+                scale: containerScaleAnimation,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.green,
+                  ),
+                  child: ScaleTransition(
+                    scale: iconScaleAnimation,
+                    child: widget.child,
+                  ),
+                ),
+              ),
+            ))
+          ]),
+        ),
       ),
     );
   }
