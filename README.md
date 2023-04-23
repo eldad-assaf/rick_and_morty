@@ -12,9 +12,11 @@ Some of the main features of Rick And Morty App includes:
 
 
 <p float="left">
-  <img src="login-screen.png" alt="" width="300" />
-  <img src="main-screen.png" alt="" width="300" />
-  <img src="new-post-screen.png" alt="" width="300" />
-  <img src="search-screen-1.png" alt="" width="300" />
-  <img src="search-screen-2.png" alt="" width="300" />
+  <img src="main.png" alt="" width="300" />
+  <img src="filter.png" alt="" width="300" />
+  <img src="favs.png" alt="" width="300" />
+  <img src="search1.png" alt="" width="300" />
+  <img src="search2.png" alt="" width="300" />
+    <img src="character_screen.png" alt="" width="300" />
+
 </p>
