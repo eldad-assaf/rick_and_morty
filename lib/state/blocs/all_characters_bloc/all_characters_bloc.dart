@@ -1,12 +1,9 @@
-import 'dart:developer';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty/state/models/character_model.dart';
 import 'package:rick_and_morty/state/models/characters_response.dart';
 import 'package:rick_and_morty/state/repository/characters_repository.dart';
-
 import '../filter_bloc/bloc/filter_bloc.dart';
 part 'all_characters_event.dart';
 part 'all_characters_state.dart';
@@ -14,7 +11,6 @@ part 'all_characters_state.dart';
 class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
   final CharacterRepository _characterRepository;
   final FilterBloc _filterBloc;
-
   bool shouldFilter = false;
   Map<String, dynamic>? filterParams = {};
   int page = 1;
@@ -22,7 +18,6 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
   bool hasReachedLastPage = false;
   ScrollPosition? lastScrollPosition;
   final ScrollController allCharactersScrollController = ScrollController();
-  // final ScrollController searchResultsScrollController = ScrollController();
 
   AllCharactersBloc(this._characterRepository, this._filterBloc)
       : super(const InitialState(null)) {
@@ -45,11 +40,6 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
           : add(LoadMoreCharactersEvent());
     });
 
-    on<SaveCurrentCharacterResponse>((event, emit) {
-      final charactersResponseStorage = CharactersResponseStorage();
-      charactersResponseStorage.characterResponse = state.charactersResponse!;
-    });
-
     on<GoBackToInitState>((event, emit) {
       lastScrollPosition = null;
       page = 1;
@@ -67,7 +57,7 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
             curve: Curves.easeInSine);
       }
     });
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     on<LoadFilterdCharactersEvent>((event, emit) async {
       emit(const LoadingCharactersState(null));
       final CharactersResponse? charactersResponse = await _characterRepository
@@ -109,7 +99,6 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
         }
       }
     });
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     on<LoadCharactersEvent>((event, emit) async {
       emit(const LoadingCharactersState(null));
       final CharactersResponse? charactersResponse =
@@ -156,23 +145,4 @@ class AllCharactersBloc extends Bloc<AllCharacterEvent, AllCharacterState> {
       //  searchPage = 1;
     });
   }
-}
-
-class CharactersResponseStorage {
-  static final CharactersResponseStorage _instance =
-      CharactersResponseStorage._internal();
-
-  factory CharactersResponseStorage() {
-    return _instance;
-  }
-
-  CharactersResponse? _charactersResponse;
-
-  CharactersResponse? get charactersResponse => _charactersResponse;
-
-  set characterResponse(CharactersResponse value) {
-    _charactersResponse = value;
-  }
-
-  CharactersResponseStorage._internal();
 }
