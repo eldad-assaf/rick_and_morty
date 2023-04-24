@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rick_and_morty/state/blocs/all_characters_bloc/all_characters_bloc.dart';
 import 'package:rick_and_morty/state/models/character_model.dart';
 import 'package:badges/badges.dart' as badge;
 
@@ -28,9 +27,6 @@ class FavouriteIconWithBadge extends StatelessWidget {
                 size: 30,
               ),
               onPressed: () {
-                context
-                    .read<AllCharactersBloc>()
-                    .add(SaveCurrentCharacterResponse());
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const FavouritesScreen(),
                 ));

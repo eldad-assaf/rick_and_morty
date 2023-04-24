@@ -30,9 +30,11 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
       showAnimatedPrompt = true;
 
       Future.delayed(const Duration(seconds: 3), () {
-        setState(() {
-          showAnimatedPrompt = false;
-        });
+        if (mounted) {
+          setState(() {
+            showAnimatedPrompt = false;
+          });
+        }
       });
     });
   }
