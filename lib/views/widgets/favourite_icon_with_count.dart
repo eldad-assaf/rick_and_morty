@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rick_and_morty/state/models/character_model.dart';
 import 'package:badges/badges.dart' as badge;
 
 import '../../state/blocs/favourites_blocs/favourites_bloc.dart';
 import '../screens/favourites_screen.dart';
 
+//the badge shows favourites character count
 class FavouriteIconWithBadge extends StatelessWidget {
   const FavouriteIconWithBadge({super.key});
 
@@ -22,9 +24,9 @@ class FavouriteIconWithBadge extends StatelessWidget {
           position: badge.BadgePosition.topStart(start: 2, top: 4),
           child: Center(
             child: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.favorite_border_outlined,
-                size: 30,
+                size: 24.sp,
               ),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(

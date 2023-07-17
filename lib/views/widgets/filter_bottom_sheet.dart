@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rick_and_morty/state/blocs/filter_bloc/bloc/filter_bloc.dart';
 
 // Map<String, dynamic> _params = {};
@@ -18,7 +19,7 @@ bool _isThereAtLeastOneFilterChoice() {
   }
 }
 
-void show(BuildContext context) {
+void showFilterModalBottomSheet(BuildContext context) {
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
@@ -42,10 +43,10 @@ void show(BuildContext context) {
                       children: [
                         Row(
                           children: [
-                            const Text(
+                            Text(
                               'Filter Options',
                               style: TextStyle(
-                                fontSize: 20.0,
+                                fontSize: 20.sp,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

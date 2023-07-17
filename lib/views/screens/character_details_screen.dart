@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty/state/blocs/favourites_blocs/favourites_bloc.dart';
 
 import '../../state/models/character_model.dart';
-import '../animations/animated_prompt.dart';
+import '../animations/add_remove_from_favs_animation.dart';
 
 enum AnimationType { add, remove }
 
@@ -131,14 +131,18 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
             ),
             if (showAnimatedPrompt)
               Center(
-                child: AnimatedPrompt(
+                child: AddRemoveFromFavsAnimation(
+                  animationType: animationType,
                   title: animationType == AnimationType.add
                       ? 'Added To Favourites!'
                       : 'Removed From Favourites',
                   subTitle: widget.character.name,
                   child: animationType == AnimationType.add
                       ? const Icon(Icons.done)
-                      : const Icon(Icons.remove_circle),
+                      : const Icon(
+                          Icons.remove_circle,
+                          color: Colors.white,
+                        ),
                 ),
               ),
           ],

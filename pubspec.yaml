@@ -33,12 +33,15 @@ dependencies:
   cached_network_image: ^3.2.3
   cupertino_icons: ^1.0.2
   dio: ^5.0.2
+  dynamic_color: ^1.6.6
   equatable: ^2.0.5
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.2
+  flutter_screenutil: ^5.8.4
   freezed: ^2.3.2
   freezed_annotation: ^2.2.0
+  google_fonts: ^5.1.0
   hydrated_bloc: ^9.1.0
   json_annotation: ^4.8.0
   lottie: ^2.3.0

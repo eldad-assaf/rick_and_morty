@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rick_and_morty/views/screens/search_screen.dart';
 import 'package:rick_and_morty/views/widgets/characters_list_grid_view.dart';
 import 'package:rick_and_morty/views/widgets/filter_bottom_sheet.dart';
@@ -36,14 +37,19 @@ class MainScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-              onPressed: () => show(context),
-              icon: const Icon(Icons.filter_list)),
+              onPressed: () => showFilterModalBottomSheet(context),
+              icon: Icon(
+                Icons.filter_list,
+                size: 24.sp,
+              )),
           actions: [
             const FavouriteIconWithBadge(),
             IconButton(
-              icon: const Icon(Icons.search),
+              icon: Icon(
+                Icons.search,
+                size: 24.sp,
+              ),
               onPressed: () {
-              
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const SearchScreen(),
                 ));

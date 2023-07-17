@@ -1,21 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rick_and_morty/common/utils/constants.dart';
+import 'package:rick_and_morty/common/utils/text_style.dart';
 
-class AnimatedPrompt extends StatefulWidget {
+import '../screens/character_details_screen.dart';
+
+//This animation is for when the user add or remove a character from 'favourites'
+//after pressing the 'heart' icon
+class AddRemoveFromFavsAnimation extends StatefulWidget {
+  final AnimationType animationType; // add or remove
   final String title;
   final String subTitle;
   final Widget child;
-  const AnimatedPrompt({
+  const AddRemoveFromFavsAnimation({
     super.key,
+    required this.animationType,
     required this.title,
     required this.subTitle,
     required this.child,
   });
 
   @override
-  State<AnimatedPrompt> createState() => _AnimatedPromptState();
+  State<AddRemoveFromFavsAnimation> createState() =>
+      _AddRemoveFromFavsAnimationState();
 }
 
-class _AnimatedPromptState extends State<AnimatedPrompt>
+class _AddRemoveFromFavsAnimationState extends State<AddRemoveFromFavsAnimation>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> iconScaleAnimation;
@@ -78,10 +88,11 @@ class _AnimatedPromptState extends State<AnimatedPrompt>
         ),
         child: ConstrainedBox(
           constraints: BoxConstraints(
-              minWidth: 100,
-              minHeight: 100,
-              maxHeight: MediaQuery.of(context).size.height * 0.8,
-              maxWidth: MediaQuery.of(context).size.width * 0.8),
+            minWidth: 100.w,
+            minHeight: 100.h,
+            maxHeight: Appconst.kHeight * 0.8,
+            maxWidth: Appconst.kWidth * 0.8,
+          ),
           child: Stack(children: [
             Padding(
               padding: const EdgeInsets.all(32.0),
@@ -89,29 +100,26 @@ class _AnimatedPromptState extends State<AnimatedPrompt>
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(
-                    height: 160,
+                  SizedBox(
+                    height: 160.h,
                   ),
                   Text(
                     widget.title,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
+                    style: appStyle(
+                        30,
+                        widget.animationType == AnimationType.add
+                            ? Appconst.kGreen
+                            : Appconst.kred,
+                        FontWeight.bold),
                   ),
-                  const SizedBox(
-                    height: 20,
+                  SizedBox(
+                    height: 20.h,
                   ),
                   Text(
                     widget.subTitle,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[600],
-                    ),
+                    style: appStyle(20, Appconst.kGreyDk, FontWeight.bold),
                   ),
                 ],
               ),
@@ -122,9 +130,11 @@ class _AnimatedPromptState extends State<AnimatedPrompt>
               child: ScaleTransition(
                 scale: containerScaleAnimation,
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.green,
+                    color: widget.animationType == AnimationType.add
+                        ? Appconst.kGreen
+                        : Appconst.kred,
                   ),
                   child: ScaleTransition(
                     scale: iconScaleAnimation,

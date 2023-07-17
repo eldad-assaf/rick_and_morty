@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:rick_and_morty/common/utils/constants.dart';
+import 'package:rick_and_morty/common/utils/text_style.dart';
 import 'package:rick_and_morty/state/models/character_model.dart';
 import 'package:rick_and_morty/views/screens/character_details_screen.dart';
 
@@ -33,10 +35,7 @@ class CharacterCard extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 character.name,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                ),
+                style: appStyle(16, Appconst.kBkDark, FontWeight.w300),
               ),
             ),
           ],

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rick_and_morty/common/utils/constants.dart';
+import 'package:rick_and_morty/common/utils/text_style.dart';
 
 class LoadingCard extends StatelessWidget {
   const LoadingCard({super.key});
@@ -8,14 +11,14 @@ class LoadingCard extends StatelessWidget {
     return Card(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          CircularProgressIndicator(color: Colors.pink),
+        children: [
+          CircularProgressIndicator(color: Appconst.kPink),
           SizedBox(
-            height: 12,
+            height: 12.h,
           ),
           Text(
             'loading...',
-            style: TextStyle(color: Colors.blue, fontSize: 24),
+            style: appStyle(24, Appconst.kBlueLight, FontWeight.normal),
           )
         ],
       ),
