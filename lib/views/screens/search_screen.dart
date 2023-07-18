@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rick_and_morty/common/utils/constants.dart';
+import 'package:rick_and_morty/common/utils/text_style.dart';
 import 'package:rick_and_morty/state/blocs/search_bloc/search_bloc.dart';
 import 'package:rick_and_morty/views/animations/not_found_animation_view.dart';
 import 'dart:async';
@@ -59,8 +61,14 @@ class _SearchScreenState extends State<SearchScreen> {
           child: SafeArea(
             child: Scaffold(
               appBar: AppBar(
+                elevation: 0,
+                iconTheme: const IconThemeData(color: Appconst.kLight),
+                backgroundColor: Appconst.kBkDark,
                 centerTitle: true,
-                title: const Text('Characters Search'),
+                title: Text(
+                  'Characters Search',
+                  style: appStyle(25, Appconst.kLight, FontWeight.bold),
+                ),
               ),
               body: Column(
                 children: [
@@ -71,8 +79,11 @@ class _SearchScreenState extends State<SearchScreen> {
                       autofocus: true,
                       controller:
                           context.read<SearchBloc>().searchTextController,
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.search),
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Appconst.kPink,
+                        ),
                       ),
                     ),
                   ),

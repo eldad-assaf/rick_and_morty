@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rick_and_morty/common/utils/constants.dart';
+import 'package:rick_and_morty/common/utils/text_style.dart';
 import 'package:rick_and_morty/views/widgets/character_card.dart';
 import 'package:rick_and_morty/views/widgets/loading_card.dart';
 import '../../state/models/characters_response.dart';
@@ -20,7 +22,8 @@ class CharactersListGridView extends StatelessWidget {
     return GridView.builder(
       controller: scrollController,
       itemCount: isLoadingMore
-          ? charactersResponse.characters.length + 1
+          ? charactersResponse.characters.length +
+              1 // +1 is for the 'loading...' grid
           : charactersResponse.characters.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -28,11 +31,11 @@ class CharactersListGridView extends StatelessWidget {
       ),
       itemBuilder: (BuildContext context, int index) {
         if (index == charactersResponse.count) {
-          return const Card(
+          return Card(
             child: Center(
               child: Text(
                 'The end',
-                style: TextStyle(color: Colors.blue, fontSize: 24),
+                style: appStyle(24, Appconst.kBlueLight, FontWeight.normal),
               ),
             ),
           );
