@@ -10,6 +10,7 @@ import '../../../../common/utils/text_style.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
+  static Page<void> page() => const MaterialPage<void>(child: Onboarding());
 
   @override
   State<Onboarding> createState() => _OnboardingState();
@@ -30,7 +31,7 @@ class _OnboardingState extends State<Onboarding> {
         PageView(
           physics: const AlwaysScrollableScrollPhysics(),
           controller: pageController,
-          children: const [PageOne(), PageTwo()],
+          children: const [PageOne(), LoginPage()],
         ),
         Align(
           alignment: Alignment.bottomCenter,

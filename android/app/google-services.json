@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1001700766502",
+    "project_id": "rick-and-morty-by-eldad",
+    "storage_bucket": "rick-and-morty-by-eldad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1001700766502:android:44612c1f12504682a807e7",
+        "android_client_info": {
+          "package_name": "com.example.rick_and_morty"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1001700766502-l5ltcnfklhc0btgkrl3l0lh66752papl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6-7EBdSK0aSNbqM8VtfVmpsfH25yJ8QI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1001700766502-l5ltcnfklhc0btgkrl3l0lh66752papl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
