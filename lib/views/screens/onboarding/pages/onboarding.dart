@@ -57,7 +57,7 @@ class _OnboardingState extends State<Onboarding> {
                       ),
                       const SizedBox(width: 8),
                       ReusableText(
-                          text: 'Skip',
+                          text: 'Signup or Login',
                           style:
                               appStyle(16, Appconst.kLight, FontWeight.w500)),
                     ],

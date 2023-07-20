@@ -20,8 +20,7 @@ class PageOne extends StatelessWidget {
           Padding(
               padding: EdgeInsets.symmetric(horizontal: 30.w),
               child: ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(60.0), 
+                borderRadius: BorderRadius.circular(60.0),
                 child: Image.asset('assets/images/onboarding.png'),
               )),
           const SizedBox(height: 100),
@@ -36,7 +35,7 @@ class PageOne extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30.w),
                 child: Text(
-                  '“Welcome to club, pal.”',
+                  '“Wubba Lubba Dub Dub!”',
                   textAlign: TextAlign.center,
                   style: appStyle(16, Appconst.kGreyLight, FontWeight.normal),
                 ),

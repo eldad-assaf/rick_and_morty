@@ -63,10 +63,12 @@ class _EmailInput extends StatelessWidget {
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
         return TextField(
+          style: appStyle(14, Appconst.kLight, FontWeight.normal),
           key: const Key('loginForm_emailInput_textField'),
           onChanged: (email) => context.read<LoginCubit>().emailChanged(email),
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
+            labelStyle: appStyle(16, Appconst.kPink, FontWeight.normal),
             labelText: 'email',
             helperText: '',
             errorText:
@@ -85,11 +87,13 @@ class _PasswordInput extends StatelessWidget {
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
         return TextField(
+          style: appStyle(14, Appconst.kLight, FontWeight.normal),
           key: const Key('loginForm_passwordInput_textField'),
           onChanged: (password) =>
               context.read<LoginCubit>().passwordChanged(password),
           obscureText: true,
           decoration: InputDecoration(
+            labelStyle: appStyle(16, Appconst.kPink, FontWeight.normal),
             labelText: 'password',
             helperText: '',
             errorText:
@@ -151,13 +155,12 @@ class _GoogleLoginButton extends StatelessWidget {
 class _SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return TextButton(
       key: const Key('loginForm_createAccount_flatButton'),
       onPressed: () => Navigator.of(context).push<void>(SignUpPage.route()),
-      child: Text(
+      child: const Text(
         'CREATE ACCOUNT',
-        style: TextStyle(color: theme.primaryColor),
+        style: TextStyle(color: Appconst.kLight),
       ),
     );
   }

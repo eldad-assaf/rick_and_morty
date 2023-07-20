@@ -1,6 +1,9 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rick_and_morty/common/reuseable_text.dart';
+import 'package:rick_and_morty/common/utils/constants.dart';
+import 'package:rick_and_morty/common/utils/text_style.dart';
 
 import '../../../../signup/cubit/login_cubit.dart';
 import '../pages/login_form.dart';
@@ -12,13 +15,22 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: BlocProvider(
-          create: (_) => LoginCubit(context.read<AuthenticationRepository>()),
-          child: const LoginForm(),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: ReusableText(
+              text: '“Welcome to club, pal.”',
+              style: appStyle(20, Appconst.kPink, FontWeight.bold)),
+          elevation: 0,
+          backgroundColor: Appconst.kBkDark,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(8),
+          child: BlocProvider(
+            create: (_) => LoginCubit(context.read<AuthenticationRepository>()),
+            child: const LoginForm(),
+          ),
         ),
       ),
     );
