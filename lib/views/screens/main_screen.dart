@@ -7,8 +7,9 @@ import 'package:rick_and_morty/views/widgets/filter_bottom_sheet.dart';
 import '../../state/blocs/all_characters_bloc/all_characters_bloc.dart';
 import '../widgets/favourite_icon_with_count.dart';
 
-class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+  static Page<void> page() => const MaterialPage<void>(child: HomePage());
 
   Widget determineWidgetByState(AllCharacterState state, BuildContext context) {
     switch (state.runtimeType) {
