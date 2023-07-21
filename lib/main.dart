@@ -131,13 +131,13 @@ class RickAndMortyApp extends StatelessWidget {
   }
 }
 
-
 class MyFlowBuilder extends StatefulWidget {
   const MyFlowBuilder({super.key});
 
   @override
   State<MyFlowBuilder> createState() => _MyFlowBuilderState();
 }
+
 class _MyFlowBuilderState extends State<MyFlowBuilder> {
   @override
   Widget build(BuildContext context) {
