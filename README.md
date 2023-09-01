@@ -6,7 +6,7 @@ A Flutter app showcasing my skills as a developer, specifically my ability to us
 Some of the main features of Rick And Morty App includes:
 * Clean architecture for efficient code organization
 * Sign in with google or with an email/password
-* Fetching Data from Api
+* Fetching Data from Api (with search functionality)
 * Animations
 * Streamlined state management with The Bloc Pattern
 * Persisting the data with Hydrated BLoC
